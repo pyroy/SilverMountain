@@ -28,6 +28,7 @@ while game_loop_active:
         if event.type == pygame.QUIT:
             game_loop_active = False
             
+    #This wall handles movement for now. This will be moved to the Player class.
     keys_pressed = pygame.key.get_pressed()
     if keys_pressed[pygame.K_d]:
         player_character.x_position += 2
@@ -38,6 +39,7 @@ while game_loop_active:
     if keys_pressed[pygame.K_s]:
         player_character.y_position += 2
             
+    #Draw everything. See visual_core.py.
     visual_core.make_graphics(screen, player_character, test_map)
             
     pygame.display.flip()

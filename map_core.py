@@ -12,7 +12,7 @@ import random
 #     betamap
 #
 #A map object has three items:
-#The groundmap+alphamap, the boundmap, and the betamap.
+#The alphamap, the boundmap, and the betamap.
 
 def init_test_map():
     groundmap = pygame.Surface((320,320))
@@ -24,6 +24,6 @@ def init_test_map():
             groundmap.blit(pygame.transform.rotate(sprites.tile_dirt, 90*random.randint(0,3)), (i*32, j*32)) #groundmap
             if random.randint(0,5) == 0:
                 zetamap.blit(sprites.env_stone, (i*32, j*32)) #improvised zetamap
-                boundmap[j][i] = 1
+                boundmap[j][i] = 1 #the format for boundchecks is boundmap[y][x]
                 
     return classes.Map(boundmap, groundmap, zetamap)
