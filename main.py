@@ -1,14 +1,15 @@
 import pygame, random
 
-#Prepare classes from classes.py
-import classes
-player_character = classes.Player()
-#---
-
 #load the test map
 import map_core
 test_map = map_core.init_test_map()
 print(test_map.boundmap)
+#---
+
+#Prepare classes from classes.py
+import classes
+player_character = classes.Player()
+player_character.set_map(test_map)
 #---
 
 #load all the sprites
@@ -28,16 +29,8 @@ while game_loop_active:
         if event.type == pygame.QUIT:
             game_loop_active = False
             
-    #This wall handles movement for now. This will be moved to the Player class.
-    keys_pressed = pygame.key.get_pressed()
-    if keys_pressed[pygame.K_d]:
-        player_character.x_position += 2
-    if keys_pressed[pygame.K_a]:
-        player_character.x_position -= 2
-    if keys_pressed[pygame.K_w]:
-        player_character.y_position -= 2
-    if keys_pressed[pygame.K_s]:
-        player_character.y_position += 2
+    #For movement
+    player_character.feed_keypresses( pygame.key.get_pressed() )
             
     #Draw everything. See visual_core.py.
     visual_core.make_graphics(screen, player_character, test_map)

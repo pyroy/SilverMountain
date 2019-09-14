@@ -13,6 +13,9 @@ import random
 #
 #A map object has three items:
 #The alphamap, the boundmap, and the betamap.
+#
+#In the future, zetamap drawing will require some restructuring due to
+#Player perspective (behind vs. in front of a rock.)
 
 def init_test_map():
     groundmap = pygame.Surface((320,320))

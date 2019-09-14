@@ -14,6 +14,7 @@ class Player:
             (26,6),
             (26,26)
             ]
+        self.map = None
         
     #In the future when inventory gets added, players look 
     #different based on what they're wearing.
@@ -21,9 +22,37 @@ class Player:
     def get_sprite(self):
         return sprites.player_sprite
         
+    def set_map(self, map):
+        self.map = map
+        
     #returns the screen position of the four boundcheck corners
     def get_bounds(self):
         return [tuple_add(self.bounding_box[i], (self.x_position, self.y_position)) for i in range(4)]
+        
+    def move(self, directions):
+        if directions[0]:
+            self.x_position -= 2
+            if self.map.check_bounds(self.get_bounds()):
+                self.x_position += 2
+        
+        if directions[1]:
+            self.y_position -= 2
+            if self.map.check_bounds(self.get_bounds()):
+                self.y_position += 2
+                
+        if directions[2]:
+            self.y_position += 2
+            if self.map.check_bounds(self.get_bounds()):
+                self.y_position -= 2
+                
+        if directions[3]:
+            self.x_position += 2
+            if self.map.check_bounds(self.get_bounds()):
+                self.x_position -= 2
+        
+    def feed_keypresses(self, keys):
+        if any( [keys[pygame.K_LEFT], keys[pygame.K_UP], keys[pygame.K_DOWN], keys[pygame.K_RIGHT]] ): #DDR order
+            self.move([keys[pygame.K_LEFT], keys[pygame.K_UP], keys[pygame.K_DOWN], keys[pygame.K_RIGHT]])
         
 class Map:
     def __init__(self, boundmap, groundmap, zetamap=None, betamap=None):
