@@ -4,6 +4,7 @@ import pygame
 class module_head:
     def __init__(self):
         self.module_name = "Inventory"
+        self.requests = []
         
     def handle_keydown(self, event):
         if event.key == pygame.K_i:

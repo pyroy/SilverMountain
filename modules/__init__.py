@@ -3,9 +3,11 @@
 #can alter game states and game rendering
 
 import modules.inventory
+import modules.module_template
 
 all_modules = [
-    inventory.module_head()
+    inventory.module_head(),
+    module_template.module_head()
     ]
     
 print("----------\nModLoader v1\n----------\nModules loaded:\n")

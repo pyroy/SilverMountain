@@ -4,6 +4,26 @@ import sprites, pygame
 def tuple_add(tup1, tup2):
     return [tup1[i] + tup2[i] for i in range(len(tup1))]
 
+class Game:
+    def __init__(self):
+        self.is_active = True
+        self.is_paused = False
+        self.screen_size = (720, 720)
+        self.canvas = pygame.display.set_mode(self.screen_size)
+        self.frame_limiter = pygame.time.Clock()
+        self.dt = 0
+        self.fps = 60
+        self.timescale = 1 #lol
+        self.frameno = 0
+        
+    def next_frame(self):
+        pygame.display.flip()
+        self.dt = abs(self.frame_limiter.tick(self.fps)*self.timescale)
+        self.frameno += 1
+        
+    def set_title(self, title):
+        pygame.display.set_caption(title)
+
 class Item:
     def __init__(self, id):
         self.id = id
