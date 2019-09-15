@@ -24,7 +24,8 @@ while game_main.is_active:
             
         if event.type == pygame.KEYDOWN:
             for module_head in MODULES:
-                module_head.handle_keydown(event)
+                try: module_head.handle_keydown(event) #TODO: missing function vs. failed function handler and log to console
+                except: pass
             
     #For movement
     if not game_main.is_paused:
@@ -34,8 +35,10 @@ while game_main.is_active:
     visual_core.make_graphics(game_main.screen_size, game_main.canvas, player_character, test_map)
     
     for module_head in MODULES:
-        module_head.run_frame(game_main, player_character, MODULES)
-        module_head.make_graphics(game_main, player_character, MODULES)
+        try: module_head.run_frame(game_main, player_character, MODULES)
+        except: pass
+        try: module_head.make_graphics(game_main, player_character, MODULES)
+        except: pass
 
     game_main.next_frame() 
     

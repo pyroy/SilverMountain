@@ -27,16 +27,14 @@ class module_head:
             
     def run_frame(self, game_main, player_character, MODULES):
         if self.open and not self.finished_animating:
-            self.anim_frames += 1
+            self.anim_frames = min(10, game_main.dt / 9 + self.anim_frames)
             self.invreach = int(self.anim_frames * 25)
-            if self.anim_frames == 10:
-                self.finished_animating = True
+            if self.anim_frames == 10: self.finished_animating = True
                 
         elif not self.open and not self.finished_animating:
-            self.anim_frames += 1
+            self.anim_frames  = min(10, game_main.dt / 9 + self.anim_frames)
             self.invreach = int(250 - self.anim_frames * 25)
-            if self.anim_frames == 10:
-                self.finished_animating = True
+            if self.anim_frames == 10: self.finished_animating = True
             
     def make_graphics(self, game_main, player_character, MODULES):
         s = pygame.Surface((self.invreach, game_main.screen_size[1]), pygame.SRCALPHA)
