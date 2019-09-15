@@ -5,12 +5,14 @@
 import modules.inventory
 import modules.timescale_mod
 import modules.module_template
+import modules.debug_info
 
 #LOAD ORDER MATTERS, KIDS
 all_modules = [
     inventory.module_head(),
     timescale_mod.module_head(),
-    module_template.module_head()
+    module_template.module_head(),
+    modules.debug_info.module_head()
     ]
     
 print("--------------\n ModLoader v1\n--------------\nModules loaded:\n")

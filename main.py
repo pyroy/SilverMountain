@@ -10,11 +10,11 @@ MODULES = modules.all_modules
 
 test_map = map_core.init_test_map()
 player_character = classes.Player()
-player_character.set_map(test_map) #Possibly needs reworking
+player_character.set_map(test_map) #Possibly needs reworking #Definitely needs reworking this is garbage
 
 game_main = classes.Game()
-game_main.set_title("Silver Mountain pre-alpha v0.1111111111111111")
-game_main.fps = 120
+game_main.set_title("Silver Mountain pre-alpha v0.1111111111111111") #haha get it the version numbers are on a backwards inverse scale hahaha hah haa
+game_main.fps = 120 #if timescale mod is active, this variable will be hijacked
 
 while game_main.is_active:
     for event in pygame.event.get():
