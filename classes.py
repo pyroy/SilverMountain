@@ -4,6 +4,17 @@ import sprites, pygame
 def tuple_add(tup1, tup2):
     return [tup1[i] + tup2[i] for i in range(len(tup1))]
 
+class Item:
+    def __init__(self, id):
+        self.id = id
+        self.sprite = sprites.IDS[self.id]
+        self.weight = 0
+        self.value = 0
+
+class Itemcontainer:
+    def __init__(self, items=[]):
+        self.items = items
+
 class Player:
     def __init__(self):
         self.x_position = 32
@@ -15,6 +26,8 @@ class Player:
             (26,26)
             ]
         self.map = None
+        
+        self.inventory = Itemcontainer([ Item("test_pick"), Item("test_pick"), Item("test_pick")])
         
     #In the future when inventory gets added, players look 
     #different based on what they're wearing.

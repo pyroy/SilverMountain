@@ -21,10 +21,21 @@ game_loop_active = True
 game_paused = False
 dt = 0
 
+#--=[Modules]=--
+import modules
+MODULES = modules.all_modules
+#---------------
+
+#game loop (duh)
 while game_loop_active:
     for event in pygame.event.get():
+    
         if event.type == pygame.QUIT:
             game_loop_active = False
+            
+        if event.type == pygame.KEYDOWN:
+            for module_head in MODULES:
+                module_head.handle_keydown(event)
             
     #For movement
     if not game_paused:
