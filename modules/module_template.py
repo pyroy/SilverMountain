@@ -7,4 +7,5 @@ class module_head:
         
     def handle_keydown(self, event): pass
     def handle_keyup(self, event): pass
-    def make_graphics(self, event): pass
+    def make_graphics(self, game_main, player_character, MODULES): pass
+    def run_frame(self): pass

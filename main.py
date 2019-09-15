@@ -32,10 +32,14 @@ while game_main.is_active:
             
     #Draw everything. See visual_core.py.
     visual_core.make_graphics(game_main.screen_size, game_main.canvas, player_character, test_map)
+    
+    for module_head in MODULES:
+        module_head.run_frame()
+        module_head.make_graphics(game_main, player_character, MODULES)
 
     game_main.next_frame() 
     
     
 #Issues:
-# - game cannot do collision checks under 10 fps
-# - certain modules are vague and inefficient and should really be (semi-)hardcoded
+# - [low priority] game cannot do collision checks under 10 fps due to bad delta time coding
+# - [medium priority] certain modules are vague and inefficient and should really be (semi-)hardcoded

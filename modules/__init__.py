@@ -5,6 +5,7 @@
 import modules.inventory
 import modules.module_template
 
+#LOAD ORDER MATTERS, KIDS
 all_modules = [
     inventory.module_head(),
     module_template.module_head()
