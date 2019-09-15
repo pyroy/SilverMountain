@@ -25,7 +25,7 @@ class module_head:
                self.open, self.finished_animating = True, False
                self.anim_frames = 0
             
-    def run_frame(self):
+    def run_frame(self, game_main, player_character, MODULES):
         if self.open and not self.finished_animating:
             self.anim_frames += 1
             self.invreach = int(self.anim_frames * 25)

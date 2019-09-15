@@ -34,7 +34,7 @@ while game_main.is_active:
     visual_core.make_graphics(game_main.screen_size, game_main.canvas, player_character, test_map)
     
     for module_head in MODULES:
-        module_head.run_frame()
+        module_head.run_frame(game_main, player_character, MODULES)
         module_head.make_graphics(game_main, player_character, MODULES)
 
     game_main.next_frame() 
