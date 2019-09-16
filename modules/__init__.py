@@ -2,18 +2,19 @@
 #every module gets access to game variables and 
 #can alter game states and game rendering
 
-import modules.inventory
-import modules.timescale_mod
-import modules.module_template
-import modules.debug_info
 
-#LOAD ORDER MATTERS, KIDS
-all_modules = [
-    inventory.module_head(),
-    timescale_mod.module_head(),
-    module_template.module_head(),
-    modules.debug_info.module_head()
+module_list = [
+    "inventory",
+    "item_equipper"
+    #"timescale_mod",
+    #"module_template",
+    #"debug_info"
     ]
+    
+exec("".join(["import modules.{}\n".format(m) for m in module_list]))
+
+all_modules = []
+[exec("all_modules.append({}.module_head())".format(m)) for m in module_list]
     
 print("--------------\n ModLoader v1\n--------------\nModules loaded:\n")
 [print("- " + m.module_name) for m in all_modules]

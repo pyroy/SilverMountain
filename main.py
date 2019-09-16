@@ -13,19 +13,26 @@ player_character = classes.Player()
 player_character.set_map(test_map) #Possibly needs reworking #Definitely needs reworking this is garbage
 
 game_main = classes.Game()
-game_main.set_title("Silver Mountain pre-alpha v0.1111111111111111") #haha get it the version numbers are on a backwards inverse scale hahaha hah haa
+game_main.set_title("Silver Mountain pre-alpha v0.125")
 game_main.fps = 120 #if timescale mod is active, this variable will be hijacked
 
+for module_head in MODULES: module_head.setup(game_main, player_character, MODULES)
+
 while game_main.is_active:
+
+    for module_head in MODULES:
+        module_head.reset_mousedown()
+
     for event in pygame.event.get():
     
         if event.type == pygame.QUIT:
             game_main.is_active = False
             
         if event.type == pygame.KEYDOWN:
-            for module_head in MODULES:
-                try: module_head.handle_keydown(event) #TODO: missing function vs. failed function handler and log to console
-                except: pass
+            for module_head in MODULES: module_head.handle_keydown(event)
+                
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            for module_head in MODULES: module_head.handle_mousedown(event)
             
     #For movement
     if not game_main.is_paused:
@@ -35,10 +42,8 @@ while game_main.is_active:
     visual_core.make_graphics(game_main.screen_size, game_main.canvas, player_character, test_map)
     
     for module_head in MODULES:
-        try: module_head.run_frame(game_main, player_character, MODULES)
-        except: pass
-        try: module_head.make_graphics(game_main, player_character, MODULES)
-        except: pass
+        module_head.run_frame(game_main, player_character, MODULES)
+        module_head.make_graphics(game_main, player_character, MODULES)
 
     game_main.next_frame() 
     

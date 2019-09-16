@@ -1,5 +1,6 @@
 import pygame
 import font
+import sprites
 
 #Inventory module allows usage of items
 #
@@ -10,10 +11,18 @@ import font
 class module_head:
     def __init__(self):
         self.module_name = "[Essential] Inventory"
-        self.requests = []
+
         self.invreach = 0
         self.open = False
         self.finished_animating = True
+        
+        self.rendered_items = []
+        
+    def setup(self, game_main, player_character, MODULES): pass
+      
+    def reset_mousedown(self): pass
+      
+    def handle_mousedown(self, event): pass
         
     def handle_keydown(self, event):
         if event.key == pygame.K_i:
@@ -37,8 +46,14 @@ class module_head:
             if self.anim_frames == 10: self.finished_animating = True
             
     def make_graphics(self, game_main, player_character, MODULES):
+        self.rendered_items = []
         s = pygame.Surface((self.invreach, game_main.screen_size[1]), pygame.SRCALPHA)
         s.fill((30,30,30,128))
         for item in range(len(player_character.inventory.items)):
-            font.render_to(s, (10, 10+20*item), player_character.inventory.items[item].id)
+            text = font.render_to(s, (10, 10+20*item), player_character.inventory.items[item].get_display_name())
+            
+            self.rendered_items.append((item,text))
+                
+            if player_character.inventory.items[item].equipped:
+                pygame.draw.rect(s, (255,255,255), (text.right + 15, 10+20*item, 6, 6))
         game_main.canvas.blit(s, (0,0))
