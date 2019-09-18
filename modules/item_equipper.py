@@ -54,9 +54,10 @@ class module_head:
         player_character.inventory.add_item(item_db.item_pick.new())
         player_character.inventory.add_item(item_db.item_pick.new())
         player_character.inventory.add_item(item_db.iron_pick.new())
-        player_character.inventory.add_item(item_db.iron_ore.new(34))
+        player_character.inventory.add_item(item_db.iron_ore.new(33))
+        player_character.inventory.add_item(item_db.iron_ore.new())
         player_character.inventory.equiplimits = {"pickaxe": 1}
-        player_character.equipped = []
+        player_character.equipped = {}
     
     def reset_mousedown(self):
         self.mouse_pos = (0,0)
@@ -70,9 +71,15 @@ class module_head:
     def handle_keydown(self, event): pass
     def handle_keyup(self, event): pass
     def welcome(self): pass
-    def make_graphics(self, game_main, player_character, MODULES): pass
+    def make_scaled_graphics(self, game_main, player_character, MODULES, visual_core, canvas_unscaled): pass
+    def make_graphics(self, game_main, player_character, MODULES, visual_core): pass
     def run_frame(self, game_main, player_character, MODULES):
-        player_character.equipped = [item for item in player_character.inventory.items if item.equipped]
+        player_character.equipped = {}
+        for item in player_character.inventory.items:
+            if item.equipped:
+                if item.type in player_character.equipped:
+                    player_character.equipped[item.type].append(item)
+                else: player_character.equipped[item.type] = [item]
         
         for t in MODULES[0].rendered_items: #TODO: Easier module lookup for a dynamic loading order
             if in_rect(t[1], self.mouse_pos, offset=(10, 10+20*t[0])) and self.mouse_clicked:

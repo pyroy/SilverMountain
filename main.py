@@ -39,11 +39,16 @@ while game_main.is_active:
         player_character.feed_info(game_main.dt, pygame.key.get_pressed() )
             
     #Draw everything. See visual_core.py.
-    visual_core.make_graphics(game_main.screen_size, game_main.canvas, player_character, test_map)
+    canvas_unscaled = visual_core.make_graphics(game_main.screen_size, game_main.canvas, player_character, test_map)
+    
+    for module_head in MODULES:
+        module_head.make_scaled_graphics(game_main, player_character, MODULES, visual_core, canvas_unscaled)
+        
+    game_main.canvas.blit(pygame.transform.scale(canvas_unscaled, game_main.screen_size), (0,0))
     
     for module_head in MODULES:
         module_head.run_frame(game_main, player_character, MODULES)
-        module_head.make_graphics(game_main, player_character, MODULES)
+        module_head.make_graphics(game_main, player_character, MODULES, visual_core)
 
     game_main.next_frame() 
     

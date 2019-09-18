@@ -5,7 +5,8 @@
 
 module_list = [
     "inventory",
-    "item_equipper"
+    "item_equipper",
+    "mining"
     #"timescale_mod",
     #"module_template",
     #"debug_info"

@@ -45,7 +45,9 @@ class module_head:
             self.invreach = int(250 - self.anim_frames * 25)
             if self.anim_frames == 10: self.finished_animating = True
             
-    def make_graphics(self, game_main, player_character, MODULES):
+    def make_scaled_graphics(self, game_main, player_character, MODULES, visual_core, canvas_unscaled): pass
+            
+    def make_graphics(self, game_main, player_character, MODULES, visual_core):
         self.rendered_items = []
         s = pygame.Surface((self.invreach, game_main.screen_size[1]), pygame.SRCALPHA)
         s.fill((30,30,30,128))

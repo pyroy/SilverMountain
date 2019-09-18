@@ -17,7 +17,7 @@ def make_graphics(screensize, game_canvas, player_character, test_map):
         canvas_unscaled.blit(test_map.alphamap, (-player_character.x_position+CAMERA_OFFSET[0], -player_character.y_position+CAMERA_OFFSET[1]))
         canvas_unscaled.blit(player_character.get_sprite(), CAMERA_OFFSET)
     
-    game_canvas.blit(pygame.transform.scale(canvas_unscaled, screensize), (0,0))
+    return canvas_unscaled
     
 #There is one glaring efficiency problem here, and that is that every frame 
 #the game has to make a new canvas, blit a whole bunch of things on it, rescale and blit again.
