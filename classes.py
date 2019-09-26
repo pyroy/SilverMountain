@@ -82,14 +82,14 @@ class Player:
         
 class Map:
     def __init__(self, boundmap, groundmap, zetamap=None, betamap=None):
+        self.map_size = (len(boundmap), len(boundmap[0]))
         self.boundmap = boundmap
         self.groundmap = groundmap
         self.zetamap = zetamap
         self.betamap = betamap
-        self.alphamap = pygame.Surface((320,320))
+        self.alphamap = pygame.Surface((32*len(boundmap[0]),32*len(boundmap)))
         self.alphamap.blit(self.groundmap, (0,0))
         self.alphamap.blit(self.zetamap, (0,0))
-        self.map_size = (len(boundmap), len(boundmap[0]))
         
     #Determines for any amount of boundcheck corners if they collide with the boundmap.
     def check_bounds(self, corners):
