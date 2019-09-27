@@ -23,7 +23,6 @@ def load_map(map_name):
         l = map_file.readlines()
         map_width = len(l[0]) - 1
         map_height = len(l)
-        print(map_width, map_height)
 
     groundmap = pygame.Surface((32*map_width, 32*map_height))
     zetamap = pygame.Surface((32*map_width, 32*map_height), pygame.SRCALPHA, 32)

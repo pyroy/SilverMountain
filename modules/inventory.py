@@ -18,6 +18,10 @@ class module_head:
         
         self.rendered_items = []
         
+    def info(self):
+        print("This mod handles showing the player's inventory.")
+        print("/n Dependencies:/n- item_equipper")
+        
     def setup(self, game_main, player_character, MODULES): pass
       
     def reset_mousedown(self): pass

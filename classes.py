@@ -15,6 +15,7 @@ class Game:
         self.fps = 60
         self.timescale = 1 #lol
         self.frameno = 0
+        self.current_map = None
         
     def next_frame(self):
         pygame.display.flip()
