@@ -108,3 +108,31 @@ class Map:
         if y < 0 or y > self.map_size[0]:
             y = None 
         return (x, y)
+        
+class RenderedItem:
+    def __init__(self, rect, drawn_pos, data, name, type):
+        self.rect = rect
+        self.drawn_pos = drawn_pos
+        self.data = data
+        self.name = name
+        self.type = type
+        
+class RenderedItems:
+    def __init__(self):
+        self.raw_list = []
+        
+    def add_item(self, rect, drawn_pos, data={}, name="", type="NoType"):
+        self.raw_list.append( RenderedItem(rect, drawn_pos, data, name, type) )
+        
+    def get_items_by_type(self, type):
+        return [i for i in self.raw_list if i.type == type]
+        
+    def in_rect(self, rect, mouse, drawn_pos=(0,0)):
+        #mama mia, look at all this spaghetti!
+        return mouse[0] >= rect.left+drawn_pos[0] and mouse[0] <= rect.right+drawn_pos[0] and mouse[1] >= drawn_pos[1] and mouse[1] <= rect.bottom+drawn_pos[1]
+        
+    def get_items_clicked(self, mouse_pos):
+        return [i for i in self.raw_list if self.in_rect(i.rect, mouse_pos, i.drawn_pos)]
+    
+    def reset(self):
+        self.raw_list = []

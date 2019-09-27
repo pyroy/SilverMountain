@@ -2,9 +2,6 @@ import pygame
 import sprites
 import item_db
 
-def in_rect(rect, mouse, offset=(0,0)):
-    return mouse[0] >= rect.left+offset[0] and mouse[0] <= rect.right+offset[0] and mouse[1] >= offset[1] and mouse[1] <= rect.bottom+offset[1]
-
 class Itemcontainer:
     def __init__(self, items=[]):
         self.items = items
@@ -44,9 +41,15 @@ class Itemcontainer:
 
 class module_head:
     def __init__(self):
-        self.module_name = "[Essential] Item Equipper"
+        self.module_name = "[E] Item Equipper"
         self.mouse_pos = (0,0)
         self.mouse_clicked = False
+        
+    def info(self):
+        print("This mod handles all inventory actions.")
+        
+    def get_dependencies(self):
+        return ["[E] Inventory"]
         
     def setup(self, game_main, player_character, MODULES):
         player_character.inventory = Itemcontainer()
@@ -81,7 +84,6 @@ class module_head:
                     player_character.equipped[item.type].append(item)
                 else: player_character.equipped[item.type] = [item]
         
-        for t in MODULES[0].rendered_items: #TODO: Easier module lookup for a dynamic loading order
-            if in_rect(t[1], self.mouse_pos, offset=(10, 10+20*t[0])) and self.mouse_clicked:
-                item = player_character.inventory.items[t[0]]
-                player_character.inventory.equip(item)
+        for i in MODULES.get_module("[E] Inventory").rendered_items.get_items_clicked(self.mouse_pos):
+            item = player_character.inventory.items[ i.data["index"] ]
+            player_character.inventory.equip(item)

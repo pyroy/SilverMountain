@@ -5,7 +5,8 @@ import classes, visual_core, map_core
 
 #--=[Modules]=--
 import modules
-MODULES = modules.all_modules
+MODULES = modules.MODULES
+ALL_MODULES = MODULES.get_all_modules()
 #---------------
 
 game_main = classes.Game()
@@ -16,7 +17,7 @@ game_main.current_map = map_core.load_map("map2")
 player_character = classes.Player()
 player_character.set_map(game_main.current_map) #Possibly needs reworking #Definitely needs reworking this is garbage (see priority list)
 
-for module_head in MODULES: module_head.setup(game_main, player_character, MODULES)
+for module_head in ALL_MODULES: module_head.setup(game_main, player_character, MODULES)
 
 def execute_command(cmd):
     if cmd[0] == "loadmap" and len(cmd) == 2:
@@ -29,7 +30,7 @@ def execute_command(cmd):
 
 while game_main.is_active:
 
-    for module_head in MODULES:
+    for module_head in ALL_MODULES:
         module_head.reset_mousedown()
 
     for event in pygame.event.get():
@@ -38,7 +39,7 @@ while game_main.is_active:
             game_main.is_active = False
             
         if event.type == pygame.KEYDOWN:
-            for module_head in MODULES: module_head.handle_keydown(event)
+            for module_head in ALL_MODULES: module_head.handle_keydown(event)
             
             if event.key == pygame.K_c:
                 cmd = input("\n[Console]<< ").split()
@@ -48,7 +49,7 @@ while game_main.is_active:
                 #    print("\n[Console]>> Command execution failed, please restart the game as this may cause severe corruption.")
                 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            for module_head in MODULES: module_head.handle_mousedown(event)
+            for module_head in ALL_MODULES: module_head.handle_mousedown(event)
             
     #For movement
     if not game_main.is_paused:
@@ -57,12 +58,12 @@ while game_main.is_active:
     #Draw everything. See visual_core.py.
     canvas_unscaled = visual_core.make_graphics(game_main.screen_size, game_main.canvas, player_character, game_main.current_map)
     
-    for module_head in MODULES:
+    for module_head in ALL_MODULES:
         module_head.make_scaled_graphics(game_main, player_character, MODULES, visual_core, canvas_unscaled)
         
     game_main.canvas.blit(pygame.transform.scale(canvas_unscaled, game_main.screen_size), (0,0))
     
-    for module_head in MODULES:
+    for module_head in ALL_MODULES:
         module_head.run_frame(game_main, player_character, MODULES)
         module_head.make_graphics(game_main, player_character, MODULES, visual_core)
 

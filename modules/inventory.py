@@ -1,6 +1,7 @@
 import pygame
 import font
 import sprites
+import classes
 
 #Inventory module allows usage of items
 #
@@ -10,17 +11,20 @@ import sprites
 
 class module_head:
     def __init__(self):
-        self.module_name = "[Essential] Inventory"
+        self.module_name = "[E] Inventory"
 
         self.invreach = 0
         self.open = False
         self.finished_animating = True
         
-        self.rendered_items = []
+        self.rendered_items = classes.RenderedItems()
         
     def info(self):
         print("This mod handles showing the player's inventory.")
         print("/n Dependencies:/n- item_equipper")
+        
+    def get_dependencies(self):
+        return ["[E] Item Equipper"]
         
     def setup(self, game_main, player_character, MODULES): pass
       
@@ -52,14 +56,18 @@ class module_head:
     def make_scaled_graphics(self, game_main, player_character, MODULES, visual_core, canvas_unscaled): pass
             
     def make_graphics(self, game_main, player_character, MODULES, visual_core):
-        self.rendered_items = []
+    
+        self.rendered_items.reset()
+        
         s = pygame.Surface((self.invreach, game_main.screen_size[1]), pygame.SRCALPHA)
         s.fill((30,30,30,128))
-        for item in range(len(player_character.inventory.items)):
-            text = font.render_to(s, (10, 10+20*item), player_character.inventory.items[item].get_display_name())
+        
+        for i in range(len(player_character.inventory.items)):
+            text_rect = font.render_to(s, (10, 10+20*i), player_character.inventory.items[i].get_display_name())
             
-            self.rendered_items.append((item,text))
+            self.rendered_items.add_item(text_rect, (10, 10+20*i), data={'index':i}, name="item_label", type="item_label")
                 
-            if player_character.inventory.items[item].equipped:
-                pygame.draw.rect(s, (255,255,255), (text.right + 15, 10+20*item, 6, 6))
+            if player_character.inventory.items[i].equipped:
+                pygame.draw.rect(s, (255,255,255), (text_rect.right + 15, 10+20*i, 6, 6))
+                
         game_main.canvas.blit(s, (0,0))
