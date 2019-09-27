@@ -82,12 +82,13 @@ class Player:
             self.move(dt, [keys[pygame.K_LEFT], keys[pygame.K_DOWN], keys[pygame.K_UP], keys[pygame.K_RIGHT]])
         
 class Map:
-    def __init__(self, boundmap, groundmap, zetamap=None, betamap=None):
+    def __init__(self, boundmap, groundmap, rendered_items, zetamap=None, betamap=None):
         self.map_size = (len(boundmap), len(boundmap[0]))
         self.boundmap = boundmap
         self.groundmap = groundmap
         self.zetamap = zetamap
         self.betamap = betamap
+        self.rendered_items = rendered_items
         self.alphamap = pygame.Surface((32*len(boundmap[0]),32*len(boundmap)))
         self.alphamap.blit(self.groundmap, (0,0))
         self.alphamap.blit(self.zetamap, (0,0))
@@ -109,6 +110,8 @@ class Map:
             y = None 
         return (x, y)
         
+    def update_graphics(self): pass;
+        
 class RenderedItem:
     def __init__(self, rect, drawn_pos, data, name, type):
         self.rect = rect
@@ -116,6 +119,10 @@ class RenderedItem:
         self.data = data
         self.name = name
         self.type = type
+        self.offset = (0,0)
+    
+    def get_drawnpos(self):
+        return tuple_add(self.drawn_pos, self.offset)
         
 class RenderedItems:
     def __init__(self):
@@ -124,15 +131,24 @@ class RenderedItems:
     def add_item(self, rect, drawn_pos, data={}, name="", type="NoType"):
         self.raw_list.append( RenderedItem(rect, drawn_pos, data, name, type) )
         
-    def get_items_by_type(self, type):
-        return [i for i in self.raw_list if i.type == type]
+    def get_items(self, type=""):
+        if type != "":
+            return [i for i in self.raw_list if i.type == type]
+        else:
+            return self.raw_list
         
     def in_rect(self, rect, mouse, drawn_pos=(0,0)):
         #mama mia, look at all this spaghetti!
+        #pretty sure these checks aren't 100% accurate but we'll see
         return mouse[0] >= rect.left+drawn_pos[0] and mouse[0] <= rect.right+drawn_pos[0] and mouse[1] >= drawn_pos[1] and mouse[1] <= rect.bottom+drawn_pos[1]
         
-    def get_items_clicked(self, mouse_pos):
-        return [i for i in self.raw_list if self.in_rect(i.rect, mouse_pos, i.drawn_pos)]
+    def get_items_clicked(self, mouse_pos, type=""):
+        return [i for i in self.get_items(type) if self.in_rect(i.rect, mouse_pos, i.get_drawnpos())]
+        
+    def offset_pos(self, offset, types):
+        for t in types:
+            for i in self.get_items(t):
+                i.offset = offset
     
     def reset(self):
         self.raw_list = []

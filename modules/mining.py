@@ -10,7 +10,7 @@ def tuple_add(tup1, tup2):
 
 class module_head:
     def __init__(self):
-        self.module_name = "[E] Mining"
+        self.module_name = "Basegame::Mining"
         self.pick_rotation = 0
         self.anim_frames = 0
         self.anim_done = True
@@ -19,7 +19,7 @@ class module_head:
         print("This mod handles mining")
         
     def get_dependencies(self):
-        return ["[E] Item Equipper", "[E] Inventory"]
+        return ["Essential::ItemEquipper", "Essential::Inventory"]
         
     def setup(self, game_main, player_character, MODULES): pass
     def reset_mousedown(self): pass

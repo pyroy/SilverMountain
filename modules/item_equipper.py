@@ -41,7 +41,7 @@ class Itemcontainer:
 
 class module_head:
     def __init__(self):
-        self.module_name = "[E] Item Equipper"
+        self.module_name = "Essential::ItemEquipper"
         self.mouse_pos = (0,0)
         self.mouse_clicked = False
         
@@ -49,7 +49,7 @@ class module_head:
         print("This mod handles all inventory actions.")
         
     def get_dependencies(self):
-        return ["[E] Inventory"]
+        return ["Essential::Inventory"]
         
     def setup(self, game_main, player_character, MODULES):
         player_character.inventory = Itemcontainer()
@@ -76,14 +76,18 @@ class module_head:
     def welcome(self): pass
     def make_scaled_graphics(self, game_main, player_character, MODULES, visual_core, canvas_unscaled): pass
     def make_graphics(self, game_main, player_character, MODULES, visual_core): pass
+    
     def run_frame(self, game_main, player_character, MODULES):
+    
         player_character.equipped = {}
+        
         for item in player_character.inventory.items:
             if item.equipped:
                 if item.type in player_character.equipped:
                     player_character.equipped[item.type].append(item)
                 else: player_character.equipped[item.type] = [item]
         
-        for i in MODULES.get_module("[E] Inventory").rendered_items.get_items_clicked(self.mouse_pos):
-            item = player_character.inventory.items[ i.data["index"] ]
-            player_character.inventory.equip(item)
+        if self.mouse_clicked:
+            for i in MODULES.get_module("Essential::Inventory").rendered_items.get_items_clicked(self.mouse_pos):
+                item = player_character.inventory.items[ i.data["index"] ]
+                player_character.inventory.equip(item)

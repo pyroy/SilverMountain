@@ -27,6 +27,9 @@ def execute_command(cmd):
     if cmd[0] == "setplayerpos" and len(cmd) == 3:
         player_character.x_position = int(cmd[1])
         player_character.y_position = int(cmd[2])
+        
+    if cmd[0] == "getinfo" and len(cmd) == 2:
+        MODULES.get_module(cmd[1]).info()
 
 while game_main.is_active:
 
@@ -71,6 +74,6 @@ while game_main.is_active:
     
     
 #Issues:
-# - [medium priority] translate visual_core & player_character into modules for cleaner & more consistent main.py code
+# - [high priority] translate visual_core & player_character into modules for cleaner & more consistent main.py code
 # - [0 priority] game cannot do collision checks under 10 fps due to bad delta time coding
-# - [low priority] certain modules are vague and inefficient and should really be (semi-)hardcoded
+# - [discarded] certain modules are vague and inefficient and should really be (semi-)hardcoded

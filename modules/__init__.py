@@ -38,7 +38,7 @@ MODULES = Modules()
     
 print("--------------\n ModLoader v1\n--------------\nModules loaded:\n")
 [print("- " + m.module_name) for m in MODULES.all_modules]
-print("\n-------------------------\n Silver Mountain Console \n-------------------------")
+print("\n-------------------------\n Silver Mountain Console \n-------------------------\nPress C in-game to execute a command.")
             
 markforshutdown = []
 for m in MODULES.all_modules:

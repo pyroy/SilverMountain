@@ -1,4 +1,4 @@
-import pygame
+import pygame, classes
 
 DEBUG_MODE = False
 UNSCALED_CANVAS_SIZE = (320, 320)
@@ -7,6 +7,7 @@ CAMERA_OFFSET = (UNSCALED_CANVAS_SIZE[0]/2-16, UNSCALED_CANVAS_SIZE[1]/2-16) #Sh
 
 #draws everything and scales it up to screen size for pixelated effect.
 def make_graphics(screensize, game_canvas, player_character, test_map):
+    
     canvas_unscaled = pygame.Surface(UNSCALED_CANVAS_SIZE)
     
     if CAMERA_MODE == "Fixed": #this one for dungeons and other interior spaces
@@ -16,6 +17,8 @@ def make_graphics(screensize, game_canvas, player_character, test_map):
     elif CAMERA_MODE == "Follow": #this one for overworld
         canvas_unscaled.blit(test_map.alphamap, (-player_character.x_position+CAMERA_OFFSET[0], -player_character.y_position+CAMERA_OFFSET[1]))
         canvas_unscaled.blit(player_character.get_sprite(), CAMERA_OFFSET)
+    
+    test_map.rendered_items.offset_pos((-player_character.x_position+CAMERA_OFFSET[0], -player_character.y_position+CAMERA_OFFSET[1]), ["groundtile","zetatile"])
     
     return canvas_unscaled
     

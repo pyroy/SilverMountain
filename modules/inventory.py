@@ -11,7 +11,7 @@ import classes
 
 class module_head:
     def __init__(self):
-        self.module_name = "[E] Inventory"
+        self.module_name = "Essential::Inventory"
 
         self.invreach = 0
         self.open = False
@@ -24,7 +24,7 @@ class module_head:
         print("/n Dependencies:/n- item_equipper")
         
     def get_dependencies(self):
-        return ["[E] Item Equipper"]
+        return ["Essential::ItemEquipper"]
         
     def setup(self, game_main, player_character, MODULES): pass
       
