@@ -34,15 +34,12 @@ def load_map(map_name):
         for j in range(0, map_height):
         
             groundmap.blit(pygame.transform.rotate(sprites.tile_dirt, 90*random.randint(0,3)), (i*32, j*32))
-            
             rendered_items.add_item(pygame.Rect(0,0,32,32), (i*32, j*32), data={'id':'tile_dirt','x':i*32,'y':j*32}, name="tile_dirt", type="groundtile")
             
             if l[j][i] == '1':
             
                 zetamap.blit(sprites.env_stone, (i*32, j*32))
-                
                 rendered_items.add_item(pygame.Rect(0,0,32,32), (i*32, j*32), data={'id':'env_stone','x':i*32,'y':j*32}, name="env_stone", type="zetatile")
-                
                 boundmap[j][i] = 1
                 
             else:

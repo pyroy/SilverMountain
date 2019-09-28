@@ -1,5 +1,7 @@
 import pygame
 
+#this entire thing might just be moved to item_db.py, but we'll see when more sprites are added.
+
 #gamesprites
 player_sprite = pygame.image.load("sprites/idle.png")
 pick_sprite = pygame.image.load("sprites/pick.png")

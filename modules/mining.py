@@ -19,7 +19,7 @@ class module_head(module_master):
         self.mouse_clicked = False
         
     def info(self):
-        print("This mod handles mining")
+        print("This module handles mining.\nEquip any pickaxe and click on a minable tile to mine the item from the tile.")
         
     def get_dependencies(self):
         return ["Essential::ItemEquipper", "Essential::Inventory"]
@@ -58,8 +58,8 @@ class module_head(module_master):
                 self.anim_frames -= 1
                 
         if self.mouse_clicked:
-            clicked_env = player_character.map.rendered_items.get_items_clicked( (self.mouse_pos[0]*320/720, self.mouse_pos[1]*320/720), "zetatile") #you HAVE to descale the mouse, NEVER scale up the canvas!!
+            clicked_env = game_main.current_map.rendered_items.get_items_clicked( (self.mouse_pos[0]*320/720, self.mouse_pos[1]*320/720), "zetatile") #you HAVE to descale the mouse, NEVER scale up the canvas!!
             for i in clicked_env:
                 if "pickaxe" in player_character.equipped and len(player_character.equipped["pickaxe"]) > 0:
-                    player_character.map.update_zetamap( (int(i.drawn_pos[0]/32), int(i.drawn_pos[1]/32)), "")
+                    game_main.current_map.update_zetamap( (int(i.drawn_pos[0]/32), int(i.drawn_pos[1]/32)), "")
                     player_character.inventory.add_item(item_db.iron_ore.new())

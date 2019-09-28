@@ -21,8 +21,7 @@ class module_head(module_master):
         self.rendered_items = classes.RenderedItems()
         
     def info(self):
-        print("This mod handles showing the player's inventory.")
-        print("/n Dependencies:/n- item_equipper")
+        print("This mod handles showing the player's inventory.\nPress I to open the inventory.")
         
     def get_dependencies(self):
         return ["Essential::ItemEquipper"]

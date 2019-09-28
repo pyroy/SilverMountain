@@ -1,13 +1,18 @@
+#--------MODULES INIT FILE--------
+
+#unlike visual_core.py (piece of shit), this one radiates an atmosphere of Chaotic Good
+#making this my favorite file
+
 #This file loads all modules of the game.
 #every module gets access to game variables and 
 #can alter game states and game rendering
+
+#Oh and it's literally the single most important file of this project
 
 module_list = [
     "inventory",
     "item_equipper",
     "mining"
-    #"timescale_mod",
-    #"debug_info"
     ]
     
 exec("".join(["import modules.{}\n".format(m) for m in module_list]))
@@ -34,9 +39,9 @@ MODULES = Modules()
 
 [exec("MODULES.all_modules.append({}.module_head())".format(m)) for m in module_list]
     
-print("--------------\n ModLoader v1\n--------------\nModules loaded:\n")
+print("--------------\n ModLoader vf\n--------------\nModules loaded:\n")
 [print("- " + m.module_name) for m in MODULES.all_modules]
-print("\n-------------------------\n Silver Mountain Console \n-------------------------\nPress C in-game to execute a command.")
+print("\n-------------------------\n Silver Mountain Console \n-------------------------\nPress C in-game to execute a command. Use 'help' for all commands.")
             
 markforshutdown = []
 for m in MODULES.all_modules:

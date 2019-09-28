@@ -9,17 +9,34 @@ MODULES = modules.MODULES
 ALL_MODULES = MODULES.get_all_modules()
 #---------------
 
+#game_main is our main game controller. all the game variables will be set in this class.
 game_main = classes.Game()
 game_main.set_title("Silver Mountain pre-alpha v0.125")
 game_main.fps = 120
 
+#maps load from map_core
 game_main.current_map = map_core.load_map("map2")
-player_character = classes.Player()
-player_character.set_map(game_main.current_map) #Possibly needs reworking #Definitely needs reworking this is garbage (see priority list)
 
+#see classes.py for details. this class basically stores player position & inventory and handles player movement.
+player_character = classes.Player()
+
+#set map for bound checks
+player_character.set_map(game_main.current_map)
+
+#setup all modules
 for module_head in ALL_MODULES: module_head.setup(game_main, player_character, MODULES)
 
+#if a command is initiated by pressing c, this runs the command
 def execute_command(cmd):
+    if cmd[0] == "help" and len(cmd) == 1:
+        print("[Console]>> - loadmap [map]")
+        print("            - setplayerpos (x) (y)")
+        print("            - getinfo [module]")
+        print("            - removetile [ground | zeta | beta] (x) (y)")
+        print("            - settile [ground | zeta | beta] (x) (y) [tilename]")
+        print("            - settimescale (scale)")
+        print("            - settargetfps (fps)")
+        
     if cmd[0] == "loadmap" and len(cmd) == 2:
         game_main.current_map = map_core.load_map(cmd[1])
         player_character.set_map(game_main.current_map)
@@ -29,6 +46,7 @@ def execute_command(cmd):
         player_character.y_position = int(cmd[2])
         
     if cmd[0] == "getinfo" and len(cmd) == 2:
+        print(" ")
         MODULES.get_module(cmd[1]).info()
         
     if cmd[0] == "removetile" and cmd[1] == "zeta" and len(cmd) == 4: 
@@ -43,53 +61,68 @@ def execute_command(cmd):
     if cmd[0] == "settargetfps" and len(cmd) == 2:
         game_main.fps = float(cmd[1])
 
+#variable to store click information for the handle_mouseclick function @ line 84
 clicked = False
+
+#game loop
 while game_main.is_active:
 
+    #at the very beginning of every frame, this function is run for all modules
+    #currently used for resetting mouse click variables
     for module_head in ALL_MODULES: module_head.start_new_frame()
 
     for event in pygame.event.get():
-    
         if event.type == pygame.QUIT:
             game_main.is_active = False
             
         if event.type == pygame.KEYDOWN:
+            #just feed the KEYDOWN event to all modules, let them handle it
             for module_head in ALL_MODULES: module_head.handle_keydown(event)
             
+            #and if C is pressed, input a command
             if event.key == pygame.K_c:
                 cmd = input("\n[Console]<< ").split()
-                execute_command(cmd)
-                #try: execute_command(cmd)
-                #except:
-                #    print("\n[Console]>> Command execution failed, please restart the game as this may cause severe corruption.")
+                try: execute_command(cmd)
+                except:
+                    print("\n[Console]>> Command execution failed, please restart the game as this may cause severe corruption.")
                 
         if event.type == pygame.MOUSEBUTTONDOWN:
+            #again, feed the event to the modules, let them decide what to do with it
             for module_head in ALL_MODULES: module_head.handle_mousedown(event)
+            
+            #send a mouseclick event if a mouseup event has happened since the last mouseclick event
             if not clicked:
                 for module_head in ALL_MODULES: module_head.handle_mouseclick(event)
                 clicked = True
             
         if event.type == pygame.MOUSEBUTTONUP:
+            #feed mouseup event to modules
             for module_head in ALL_MODULES: module_head.handle_mouseup(event)
+            
+            #and reset the mouseclick variable @ line 84
             clicked = False
             
-    #For movement
+    #this needs reworking, but for now it handles continuous movement for the player.
     if not game_main.is_paused:
         player_character.feed_info(game_main.dt, pygame.key.get_pressed() )
             
-    #Draw everything. See visual_core.py.
+    #draw everything on unscaled canvas, see visual_core.py
     canvas_unscaled = visual_core.make_graphics(game_main.screen_size, game_main.canvas, player_character, game_main.current_map)
     
+    #let the modules also draw on the unscaled canvas
     for module_head in ALL_MODULES:
         module_head.make_scaled_graphics(game_main, player_character, MODULES, visual_core, canvas_unscaled)
         
+    #scale the unscaled canvas to fit the screen
     game_main.canvas.blit(pygame.transform.scale(canvas_unscaled, game_main.screen_size), (0,0))
-    #game_main.canvas.blit(canvas_unscaled, (0,0))
     
+    #then run each frame and draw unscaled graphics over the screen
+    #also needs reworking, who calculates frames after scaled graphics, but before unscaled graphics?
     for module_head in ALL_MODULES:
         module_head.run_frame(game_main, player_character, MODULES)
         module_head.make_graphics(game_main, player_character, MODULES, visual_core)
 
+    #advance my child
     game_main.next_frame() 
     
     
