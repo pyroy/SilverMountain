@@ -1,6 +1,6 @@
 import pygame
 import essentials.font as font
-import essentials.item_db as item_db
+from essentials.item_db import idb
 from modules.MODULE import module_master
 
 class Itemcontainer:
@@ -61,12 +61,12 @@ class module_head(module_master):
         player_character = MODULES.get_module("Essential::Player").player_character
         
         player_character.inventory = Itemcontainer()
-        player_character.inventory.add_item(item_db.item_pick.new())
-        player_character.inventory.add_item(item_db.item_pick.new())
-        player_character.inventory.add_item(item_db.item_pick.new())
-        player_character.inventory.add_item(item_db.iron_pick.new())
-        player_character.inventory.add_item(item_db.iron_ore.new(33))
-        player_character.inventory.add_item(item_db.iron_ore.new())
+        player_character.inventory.add_item(idb.lookup["oldpick"].new())
+        player_character.inventory.add_item(idb.lookup["oldpick"].new())
+        player_character.inventory.add_item(idb.lookup["oldpick"].new())
+        player_character.inventory.add_item(idb.lookup["ironpick"].new())
+        player_character.inventory.add_item(idb.lookup["ironore"].new(33))
+        player_character.inventory.add_item(idb.lookup["ironore"].new())
         player_character.inventory.equiplimits = {"pickaxe": 1}
         player_character.equipped = {}
       

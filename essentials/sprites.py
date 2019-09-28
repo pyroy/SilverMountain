@@ -11,10 +11,12 @@ tile_dirt = pygame.image.load("tiles/tile_dirt.png")
 
 #environment sprites
 env_stone = pygame.image.load("sprites/stone.png")
+env_ore = pygame.image.load("sprites/ore.png")
 
 IDS = {
     "test_pick": pygame.image.load("sprites/pick.png"),
-    "env_stone": pygame.image.load("sprites/stone.png")
+    "env_stone": pygame.image.load("sprites/stone.png"),
+    "env_ore": pygame.image.load("sprites/ore.png")
     }
     
 #TODO: put every sprite in this ID list

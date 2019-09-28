@@ -1,6 +1,6 @@
 import pygame, math
 import essentials.sprites as sprites
-import essentials.item_db as item_db
+from essentials.item_db import idb
 from modules.MODULE import module_master
 
 def tuple_sub(tup1, tup2):
@@ -66,4 +66,5 @@ class module_head(module_master):
             for i in clicked_env:
                 if "pickaxe" in self.pc.equipped and len(self.pc.equipped["pickaxe"]) > 0:
                     game_main.current_map.update_zetamap( (int(i.drawn_pos[0]/32), int(i.drawn_pos[1]/32)), "")
-                    self.pc.inventory.add_item(item_db.iron_ore.new())
+                    if 'drop' in i.data:
+                        self.pc.inventory.add_item(idb.lookup[i.data["drop"]].new())

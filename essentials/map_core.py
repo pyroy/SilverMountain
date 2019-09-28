@@ -43,6 +43,12 @@ def load_map(map_name):
                 rendered_items.add_item(pygame.Rect(0,0,32,32), (i*32, j*32), data={'id':'env_stone','x':i*32,'y':j*32}, name="env_stone", type="zetatile")
                 boundmap[j][i] = 1
                 
+            elif l[j][i] == '2':
+            
+                zetamap.blit(sprites.env_ore, (i*32, j*32))
+                rendered_items.add_item(pygame.Rect(0,0,32,32), (i*32, j*32), data={'id':'env_ore','x':i*32,'y':j*32,'drop':'ironore'}, name="env_ore", type="zetatile")
+                boundmap[j][i] = 1
+                
             else:
             
                 boundmap[j][i] = 0
