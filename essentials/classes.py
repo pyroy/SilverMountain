@@ -1,4 +1,5 @@
-import sprites, pygame
+import pygame
+import essentials.sprites as sprites
 
 #adds tuples or lists such that (a, b) + (c, d) = (a + b, c + d)
 def tuple_add(tup1, tup2):
@@ -17,6 +18,7 @@ class Game:
         self.fps = 60
         self.timescale = 1 #lol
         self.frameno = 0
+        self.keys_pressed = []
         
         #sets the map currently active (mainly for graphics)
         self.current_map = None

@@ -1,6 +1,6 @@
 import pygame
-import sprites
-import item_db
+import essentials.font as font
+import essentials.item_db as item_db
 from modules.MODULE import module_master
 
 class Itemcontainer:
@@ -56,7 +56,10 @@ class module_head(module_master):
         self.mouse_pos = (0,0)
         self.mouse_clicked = False
         
-    def setup(self, game_main, player_character, MODULES):
+    def setup(self, game_main, MODULES):
+    
+        player_character = MODULES.get_module("Essential::Player").player_character
+        
         player_character.inventory = Itemcontainer()
         player_character.inventory.add_item(item_db.item_pick.new())
         player_character.inventory.add_item(item_db.item_pick.new())
@@ -72,7 +75,9 @@ class module_head(module_master):
             self.mouse_pos = event.pos
             self.mouse_clicked = True
     
-    def run_frame(self, game_main, player_character, MODULES):
+    def run_frame(self, game_main, MODULES):
+    
+        player_character = MODULES.get_module("Essential::Player").player_character
     
         player_character.equipped = {}
         

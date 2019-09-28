@@ -1,7 +1,7 @@
 import pygame
-import font
-import sprites
-import classes
+import essentials.font as font
+import essentials.sprites as sprites
+import essentials.classes as classes
 from modules.MODULE import module_master
 
 #Inventory module allows usage of items
@@ -36,7 +36,7 @@ class module_head(module_master):
                self.open, self.finished_animating = True, False
                self.anim_frames = 0
             
-    def run_frame(self, game_main, player_character, MODULES):
+    def run_frame(self, game_main, MODULES):
         if self.open and not self.finished_animating:
             self.anim_frames = min(10, game_main.dt / 9 + self.anim_frames)
             self.invreach = int(self.anim_frames * 25)
@@ -47,9 +47,11 @@ class module_head(module_master):
             self.invreach = int(250 - self.anim_frames * 25)
             if self.anim_frames == 10: self.finished_animating = True
             
-    def make_graphics(self, game_main, player_character, MODULES, visual_core):
+    def make_graphics(self, game_main, MODULES, visual_core):
     
         self.rendered_items.reset()
+        
+        player_character = MODULES.get_module("Essential::Player").player_character
         
         s = pygame.Surface((self.invreach, game_main.screen_size[1]), pygame.SRCALPHA)
         s.fill((30,30,30,128))

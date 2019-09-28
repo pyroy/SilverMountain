@@ -1,7 +1,9 @@
 import pygame, random, math
 pygame.init()
 
-import classes, visual_core, map_core
+import essentials.classes as classes
+import essentials.visual_core as visual_core
+import essentials.map_core as map_core
 
 #--=[Modules]=--
 import modules
@@ -17,14 +19,8 @@ game_main.fps = 120
 #maps load from map_core
 game_main.current_map = map_core.load_map("map2")
 
-#see classes.py for details. this class basically stores player position & inventory and handles player movement.
-player_character = classes.Player()
-
-#set map for bound checks
-player_character.set_map(game_main.current_map)
-
 #setup all modules
-for module_head in ALL_MODULES: module_head.setup(game_main, player_character, MODULES)
+for module_head in ALL_MODULES: module_head.setup(game_main, MODULES)
 
 #if a command is initiated by pressing c, this runs the command
 def execute_command(cmd):
@@ -39,9 +35,11 @@ def execute_command(cmd):
         
     if cmd[0] == "loadmap" and len(cmd) == 2:
         game_main.current_map = map_core.load_map(cmd[1])
+        player_character = MODULES.get_module("Essential::Player").player_character
         player_character.set_map(game_main.current_map)
                         
     if cmd[0] == "setplayerpos" and len(cmd) == 3:
+        player_character = MODULES.get_module("Essential::Player").player_character
         player_character.x_position = int(cmd[1])
         player_character.y_position = int(cmd[2])
         
@@ -102,16 +100,14 @@ while game_main.is_active:
             #and reset the mouseclick variable @ line 84
             clicked = False
             
-    #this needs reworking, but for now it handles continuous movement for the player.
-    if not game_main.is_paused:
-        player_character.feed_info(game_main.dt, pygame.key.get_pressed() )
+    game_main.keys_pressed = pygame.key.get_pressed()
             
     #draw everything on unscaled canvas, see visual_core.py
-    canvas_unscaled = visual_core.make_graphics(game_main.screen_size, game_main.canvas, player_character, game_main.current_map)
+    canvas_unscaled = visual_core.make_graphics(game_main, MODULES)
     
     #let the modules also draw on the unscaled canvas
     for module_head in ALL_MODULES:
-        module_head.make_scaled_graphics(game_main, player_character, MODULES, visual_core, canvas_unscaled)
+        module_head.make_scaled_graphics(game_main, MODULES, visual_core, canvas_unscaled)
         
     #scale the unscaled canvas to fit the screen
     game_main.canvas.blit(pygame.transform.scale(canvas_unscaled, game_main.screen_size), (0,0))
@@ -119,14 +115,8 @@ while game_main.is_active:
     #then run each frame and draw unscaled graphics over the screen
     #also needs reworking, who calculates frames after scaled graphics, but before unscaled graphics?
     for module_head in ALL_MODULES:
-        module_head.run_frame(game_main, player_character, MODULES)
-        module_head.make_graphics(game_main, player_character, MODULES, visual_core)
+        module_head.run_frame(game_main, MODULES)
+        module_head.make_graphics(game_main, MODULES, visual_core)
 
     #advance my child
     game_main.next_frame() 
-    
-    
-#Issues:
-# - [high priority] translate visual_core & player_character into modules for cleaner & more consistent main.py code
-# - [0 priority] game cannot do collision checks under 10 fps due to bad delta time coding
-# - [discarded] certain modules are vague and inefficient and should really be (semi-)hardcoded

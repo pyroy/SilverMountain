@@ -1,5 +1,6 @@
-import pygame, sprites, classes
-import random
+import pygame, random
+import essentials.sprites as sprites
+import essentials.classes as classes
 
 #  Map drawing order
 #

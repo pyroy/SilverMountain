@@ -1,6 +1,6 @@
 import pygame, math
-import sprites
-import item_db
+import essentials.sprites as sprites
+import essentials.item_db as item_db
 from modules.MODULE import module_master
 
 def tuple_sub(tup1, tup2):
@@ -24,6 +24,9 @@ class module_head(module_master):
     def get_dependencies(self):
         return ["Essential::ItemEquipper", "Essential::Inventory"]
         
+    def setup(self, game_main, MODULES):
+        self.pc = MODULES.get_module("Essential::Player").player_character
+        
     def start_new_frame(self):
         self.mouse_pos = (0,0)
         self.mouse_clicked = False
@@ -36,17 +39,18 @@ class module_head(module_master):
             self.mouse_pos = event.pos
             self.mouse_clicked = True
     
-    def make_scaled_graphics(self, game_main, player_character, MODULES, visual_core, canvas_unscaled):
-        if "pickaxe" in player_character.equipped and len(player_character.equipped["pickaxe"]) > 0:
-            c = player_character.equipped["pickaxe"][0].sprite.get_rect()
-            p = pygame.transform.rotate(player_character.equipped["pickaxe"][0].sprite, self.pick_rotation)
+    def make_scaled_graphics(self, game_main, MODULES, visual_core, canvas_unscaled):
+        if "pickaxe" in self.pc.equipped and len(self.pc.equipped["pickaxe"]) > 0:
+            c = self.pc.equipped["pickaxe"][0].sprite.get_rect()
+            p = pygame.transform.rotate(self.pc.equipped["pickaxe"][0].sprite, self.pick_rotation)
             c.center = p.get_rect().center
             r_x = -math.sin(-self.pick_rotation/360*2*math.pi+0.75*math.pi)*16
             r_y = math.cos(-self.pick_rotation/360*2*math.pi+0.75*math.pi)*16
             canvas_unscaled.blit(p, tuple_add(tuple_sub(visual_core.CAMERA_OFFSET, c.topleft), (r_x-6, r_y+8))) #adjust positioning for rotation around pivot, and fix it to player location
             #So this does not yet work in FIXED camera mode but that's not fully implemented yet
             
-    def run_frame(self, game_main, player_character, MODULES):
+    def run_frame(self, game_main, MODULES):
+    
         if not self.anim_done:
             if self.anim_frames == -10:
                 self.anim_done = True
@@ -60,6 +64,6 @@ class module_head(module_master):
         if self.mouse_clicked:
             clicked_env = game_main.current_map.rendered_items.get_items_clicked( (self.mouse_pos[0]*320/720, self.mouse_pos[1]*320/720), "zetatile") #you HAVE to descale the mouse, NEVER scale up the canvas!!
             for i in clicked_env:
-                if "pickaxe" in player_character.equipped and len(player_character.equipped["pickaxe"]) > 0:
+                if "pickaxe" in self.pc.equipped and len(self.pc.equipped["pickaxe"]) > 0:
                     game_main.current_map.update_zetamap( (int(i.drawn_pos[0]/32), int(i.drawn_pos[1]/32)), "")
-                    player_character.inventory.add_item(item_db.iron_ore.new())
+                    self.pc.inventory.add_item(item_db.iron_ore.new())

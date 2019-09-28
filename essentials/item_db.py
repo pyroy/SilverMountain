@@ -1,4 +1,4 @@
-import sprites
+import essentials.sprites as sprites
 import copy
 
 class Item:

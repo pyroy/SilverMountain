@@ -10,6 +10,7 @@
 #Oh and it's literally the single most important file of this project
 
 module_list = [
+    "player",
     "inventory",
     "item_equipper",
     "mining",
