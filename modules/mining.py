@@ -1,6 +1,7 @@
 import pygame, math
 import sprites
 import item_db
+from modules.MODULE import module_master
 
 def tuple_sub(tup1, tup2):
     return [tup1[i] - tup2[i] for i in range(len(tup1))]
@@ -8,12 +9,14 @@ def tuple_sub(tup1, tup2):
 def tuple_add(tup1, tup2):
     return [tup1[i] + tup2[i] for i in range(len(tup1))]
 
-class module_head:
+class module_head(module_master):
     def __init__(self):
         self.module_name = "Basegame::Mining"
         self.pick_rotation = 0
         self.anim_frames = 0
         self.anim_done = True
+        self.mouse_pos = (0,0)
+        self.mouse_clicked = False
         
     def info(self):
         print("This mod handles mining")
@@ -21,17 +24,17 @@ class module_head:
     def get_dependencies(self):
         return ["Essential::ItemEquipper", "Essential::Inventory"]
         
-    def setup(self, game_main, player_character, MODULES): pass
-    def reset_mousedown(self): pass
-    
-    def handle_mousedown(self, event):
-        self.anim_done = False
-        self.anim_frames = 10
-        
-    def handle_keydown(self, event): pass
-    def handle_keyup(self, event): pass
-    def welcome(self): pass
-    def make_graphics(self, game_main, player_character, MODULES, visual_core): pass
+    def start_new_frame(self):
+        self.mouse_pos = (0,0)
+        self.mouse_clicked = False
+      
+    def handle_mouseclick(self, event):
+        if event.button == 1:
+            self.anim_done = False
+            self.anim_frames = 10
+            
+            self.mouse_pos = event.pos
+            self.mouse_clicked = True
     
     def make_scaled_graphics(self, game_main, player_character, MODULES, visual_core, canvas_unscaled):
         if "pickaxe" in player_character.equipped and len(player_character.equipped["pickaxe"]) > 0:
@@ -53,3 +56,9 @@ class module_head:
                 else:
                     self.pick_rotation = 45-9*2.5+2.5*self.anim_frames
                 self.anim_frames -= 1
+                
+        if self.mouse_clicked:
+            clicked_env = player_character.map.rendered_items.get_items_clicked( (self.mouse_pos[0]*320/720, self.mouse_pos[1]*320/720), "zetatile") #you HAVE to descale the mouse, NEVER scale up the canvas!!
+            for i in clicked_env:
+                if "pickaxe" in player_character.equipped and len(player_character.equipped["pickaxe"]) > 0:
+                    player_character.map.update_zetamap( (int(i.drawn_pos[0]/32), int(i.drawn_pos[1]/32)), "")

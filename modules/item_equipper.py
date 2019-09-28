@@ -1,6 +1,7 @@
 import pygame
 import sprites
 import item_db
+from modules.MODULE import module_master
 
 class Itemcontainer:
     def __init__(self, items=[]):
@@ -39,7 +40,7 @@ class Itemcontainer:
             else:
                 item.equipped = True
 
-class module_head:
+class module_head(module_master):
     def __init__(self):
         self.module_name = "Essential::ItemEquipper"
         self.mouse_pos = (0,0)
@@ -51,6 +52,10 @@ class module_head:
     def get_dependencies(self):
         return ["Essential::Inventory"]
         
+    def start_new_frame(self):
+        self.mouse_pos = (0,0)
+        self.mouse_clicked = False
+        
     def setup(self, game_main, player_character, MODULES):
         player_character.inventory = Itemcontainer()
         player_character.inventory.add_item(item_db.item_pick.new())
@@ -61,21 +66,11 @@ class module_head:
         player_character.inventory.add_item(item_db.iron_ore.new())
         player_character.inventory.equiplimits = {"pickaxe": 1}
         player_character.equipped = {}
-    
-    def reset_mousedown(self):
-        self.mouse_pos = (0,0)
-        self.mouse_clicked = False
       
-    def handle_mousedown(self, event):
+    def handle_mouseclick(self, event):
         if event.button == 1:
             self.mouse_pos = event.pos
             self.mouse_clicked = True
-    
-    def handle_keydown(self, event): pass
-    def handle_keyup(self, event): pass
-    def welcome(self): pass
-    def make_scaled_graphics(self, game_main, player_character, MODULES, visual_core, canvas_unscaled): pass
-    def make_graphics(self, game_main, player_character, MODULES, visual_core): pass
     
     def run_frame(self, game_main, player_character, MODULES):
     

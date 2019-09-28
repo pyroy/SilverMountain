@@ -30,11 +30,17 @@ def execute_command(cmd):
         
     if cmd[0] == "getinfo" and len(cmd) == 2:
         MODULES.get_module(cmd[1]).info()
+        
+    if cmd[0] == "removetile" and cmd[1] == "zeta" and len(cmd) == 4: 
+        game_main.current_map.update_zetamap((int(cmd[2]),int(cmd[3])), "")
+        
+    if cmd[0] == "settile" and cmd[1] == "zeta" and len(cmd) == 5: 
+        game_main.current_map.update_zetamap((int(cmd[2]),int(cmd[3])), cmd[4])
 
+clicked = False
 while game_main.is_active:
 
-    for module_head in ALL_MODULES:
-        module_head.reset_mousedown()
+    for module_head in ALL_MODULES: module_head.start_new_frame()
 
     for event in pygame.event.get():
     
@@ -53,6 +59,13 @@ while game_main.is_active:
                 
         if event.type == pygame.MOUSEBUTTONDOWN:
             for module_head in ALL_MODULES: module_head.handle_mousedown(event)
+            if not clicked:
+                for module_head in ALL_MODULES: module_head.handle_mouseclick(event)
+                clicked = True
+            
+        if event.type == pygame.MOUSEBUTTONUP:
+            for module_head in ALL_MODULES: module_head.handle_mouseup(event)
+            clicked = False
             
     #For movement
     if not game_main.is_paused:
@@ -65,6 +78,7 @@ while game_main.is_active:
         module_head.make_scaled_graphics(game_main, player_character, MODULES, visual_core, canvas_unscaled)
         
     game_main.canvas.blit(pygame.transform.scale(canvas_unscaled, game_main.screen_size), (0,0))
+    #game_main.canvas.blit(canvas_unscaled, (0,0))
     
     for module_head in ALL_MODULES:
         module_head.run_frame(game_main, player_character, MODULES)

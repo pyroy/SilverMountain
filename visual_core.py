@@ -18,7 +18,7 @@ def make_graphics(screensize, game_canvas, player_character, test_map):
         canvas_unscaled.blit(test_map.alphamap, (-player_character.x_position+CAMERA_OFFSET[0], -player_character.y_position+CAMERA_OFFSET[1]))
         canvas_unscaled.blit(player_character.get_sprite(), CAMERA_OFFSET)
     
-    test_map.rendered_items.offset_pos((-player_character.x_position+CAMERA_OFFSET[0], -player_character.y_position+CAMERA_OFFSET[1]), ["groundtile","zetatile"])
+    test_map.rendered_items.modify_pos((-player_character.x_position+CAMERA_OFFSET[0], -player_character.y_position+CAMERA_OFFSET[1]), 1, ["groundtile","zetatile"])
     
     return canvas_unscaled
     

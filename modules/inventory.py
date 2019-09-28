@@ -2,6 +2,7 @@ import pygame
 import font
 import sprites
 import classes
+from modules.MODULE import module_master
 
 #Inventory module allows usage of items
 #
@@ -9,7 +10,7 @@ import classes
 #
 #please do not ask why this is a module
 
-class module_head:
+class module_head(module_master):
     def __init__(self):
         self.module_name = "Essential::Inventory"
 
@@ -25,12 +26,6 @@ class module_head:
         
     def get_dependencies(self):
         return ["Essential::ItemEquipper"]
-        
-    def setup(self, game_main, player_character, MODULES): pass
-      
-    def reset_mousedown(self): pass
-      
-    def handle_mousedown(self, event): pass
         
     def handle_keydown(self, event):
         if event.key == pygame.K_i:
@@ -52,8 +47,6 @@ class module_head:
             self.anim_frames  = min(10, game_main.dt / 9 + self.anim_frames)
             self.invreach = int(250 - self.anim_frames * 25)
             if self.anim_frames == 10: self.finished_animating = True
-            
-    def make_scaled_graphics(self, game_main, player_character, MODULES, visual_core, canvas_unscaled): pass
             
     def make_graphics(self, game_main, player_character, MODULES, visual_core):
     

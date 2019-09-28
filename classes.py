@@ -89,7 +89,11 @@ class Map:
         self.zetamap = zetamap
         self.betamap = betamap
         self.rendered_items = rendered_items
-        self.alphamap = pygame.Surface((32*len(boundmap[0]),32*len(boundmap)))
+        self.alphamap = None
+        self.process_alphamap()
+        
+    def process_alphamap(self):
+        self.alphamap = pygame.Surface((32*len(self.boundmap[0]),32*len(self.boundmap)))
         self.alphamap.blit(self.groundmap, (0,0))
         self.alphamap.blit(self.zetamap, (0,0))
         
@@ -110,7 +114,20 @@ class Map:
             y = None 
         return (x, y)
         
-    def update_graphics(self): pass;
+    def update_zetamap(self, pos, env):
+        self.zetamap.fill( (0,0,0,0), (pos[0]*32, pos[1]*32, 32, 32) )
+        self.boundmap[pos[1]][pos[0]] = 0
+        
+        for i in self.rendered_items.get_items(data=[("x", pos[0]*32), ("y", pos[1]*32)]):
+            self.rendered_items.remove_item(i)
+        
+        if env != "":
+            self.zetamap.blit( sprites.IDS[env], pos )
+            self.boundmap[pos[1]][pos[0]] = 1
+            
+            self.rendered_items.add_item(pygame.Rect(0,0,32,32), (pos[0]*32, pos[1]*32), data={'id':env,'x':pos[0]*32,'y':pos[1]*32}, name=env, type="zetatile")
+            
+        self.process_alphamap()
         
 class RenderedItem:
     def __init__(self, rect, drawn_pos, data, name, type):
@@ -131,11 +148,23 @@ class RenderedItems:
     def add_item(self, rect, drawn_pos, data={}, name="", type="NoType"):
         self.raw_list.append( RenderedItem(rect, drawn_pos, data, name, type) )
         
-    def get_items(self, type=""):
+    def get_items(self, type="", data=[]):
         if type != "":
             return [i for i in self.raw_list if i.type == type]
+        elif data != []:
+            l = []
+            for item in self.raw_list:
+                m = True
+                for match in data:
+                    if not (match[0] in item.data and item.data[match[0]] == match[1]):
+                        m = False
+                if m: l.append(item)
+            return l
         else:
             return self.raw_list
+            
+    def remove_item(self, item):
+        self.raw_list.remove(item)
         
     def in_rect(self, rect, mouse, drawn_pos=(0,0)):
         #mama mia, look at all this spaghetti!
@@ -145,10 +174,10 @@ class RenderedItems:
     def get_items_clicked(self, mouse_pos, type=""):
         return [i for i in self.get_items(type) if self.in_rect(i.rect, mouse_pos, i.get_drawnpos())]
         
-    def offset_pos(self, offset, types):
+    def modify_pos(self, offset, scale, types):
         for t in types:
             for i in self.get_items(t):
-                i.offset = offset
+                i.offset = (offset[0]*scale, offset[1]*scale)
     
     def reset(self):
         self.raw_list = []
