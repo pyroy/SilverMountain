@@ -15,6 +15,7 @@ Here's the TODO list.
 - Update mining so mining isn't instant
 - Update mining so mining gives a drop specified in item_db.py
 - Add map warps
+- Properly implement item_db item lookup
 
 # Changelog
 ## v0.125 
