@@ -30,7 +30,7 @@ Here's the TODO list.
 - Dt coding implemented (kind of)
 
 ## v0.1 
-### "The I've-been-programming-for-10-years-but-somehow-my-code-is-still-f****ing-awful* update"
+### "The I've-been-programming-for-10-years-but-somehow-my-code-is-still-f**king-awful update"
 - Skeleton
 - Fixed map drawing
 - Player character can move
