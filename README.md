@@ -13,9 +13,9 @@ Here's the TODO list.
 - ~~Make visual_core, map_core and player_character modules~~ DONE
 - Add more environment items (current items are prefixed by env_)
 - Update mining so mining isn't instant
-- Update mining so mining gives a drop specified in item_db.py
+- ~~Update mining so mining gives a drop specified in item_db.py~~ DONE
 - Add map warps
-- Properly implement item_db item lookup
+- ~~Properly implement item_db item lookup~~ DONE
 
 # Changelog
 ## v0.125 
