@@ -2,13 +2,11 @@
 #every module gets access to game variables and 
 #can alter game states and game rendering
 
-
 module_list = [
     "inventory",
     "item_equipper",
     "mining"
     #"timescale_mod",
-    #"module_template",
     #"debug_info"
     ]
     

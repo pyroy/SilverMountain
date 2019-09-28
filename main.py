@@ -11,7 +11,7 @@ ALL_MODULES = MODULES.get_all_modules()
 
 game_main = classes.Game()
 game_main.set_title("Silver Mountain pre-alpha v0.125")
-game_main.fps = 120 #if timescale mod is active, this variable will be hijacked and cannot be changed in code
+game_main.fps = 120
 
 game_main.current_map = map_core.load_map("map2")
 player_character = classes.Player()
@@ -36,6 +36,12 @@ def execute_command(cmd):
         
     if cmd[0] == "settile" and cmd[1] == "zeta" and len(cmd) == 5: 
         game_main.current_map.update_zetamap((int(cmd[2]),int(cmd[3])), cmd[4])
+        
+    if cmd[0] == "settimescale" and len(cmd) == 2:
+        game_main.timescale = float(cmd[1])
+        
+    if cmd[0] == "settargetfps" and len(cmd) == 2:
+        game_main.fps = float(cmd[1])
 
 clicked = False
 while game_main.is_active:

@@ -62,3 +62,4 @@ class module_head(module_master):
             for i in clicked_env:
                 if "pickaxe" in player_character.equipped and len(player_character.equipped["pickaxe"]) > 0:
                     player_character.map.update_zetamap( (int(i.drawn_pos[0]/32), int(i.drawn_pos[1]/32)), "")
+                    player_character.inventory.add_item(item_db.iron_ore.new())
