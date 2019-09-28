@@ -1,10 +1,9 @@
 # Silver Mountain v0.125
 A glorious game inspired by THE classic mobile game, Gold Mountain.
 
-jk, Silver Mountain is stupid and I will never finish it but in theory this would be a RPG where your primary source of income is mining.
+In theory this would be a RPG where your primary source of income is mining.
 
-why are you here?
-why are you reading this?
+Get rich, become glorious!
 
 ## now that I have your unwavering attention
 Here's the TODO list.
