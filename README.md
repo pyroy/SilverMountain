@@ -6,7 +6,7 @@ jk, Silver Mountain is stupid and I will never finish it but in theory this woul
 why are you here?
 why are you reading this?
 
-# now that I have your unwavering attention
+## now that I have your unwavering attention
 Here's the TODO list.
 
 # To advance to version v0.14285714286, we need to:
@@ -17,18 +17,18 @@ Here's the TODO list.
 - Update mining so mining gives a drop specified in item_db.py
 - Add map warps
 
-## Changelog
-# v0.125
+# Changelog
+## v0.125
 - Modules fully implemented
 - Inventory, Item_db, Item_equipper added.
 - Map loading implemented
 
-# v0.11111111111
+## v0.11111111111
 - Camera follow mode implemented
 - Work on modules started
 - Dt coding implemented
 
-# v0.1
+## v0.1
 - Skeleton
 - Fixed map drawing
 - Player character can move
