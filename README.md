@@ -17,17 +17,17 @@ Here's the TODO list.
 - Add map warps
 
 # Changelog
-## v0.125
+## v0.125 "The why-can-I-equip-iron-ore update"
 - Modules fully implemented
 - Inventory, Item_db, Item_equipper added.
 - Map loading implemented
 
-## v0.11111111111
-- Camera follow mode implemented
+## v0.11111111111 "The how-the-f***-do-I-make-a-game update"
+- Camera follow mode implemented (and broke fixed mode in the process)
 - Work on modules started
-- Dt coding implemented
+- Dt coding implemented (kind of)
 
-## v0.1
+## v0.1 "The I've-been-programming-for-10-years-but-somehow-my-code-is-still-f***/ing-awful update"
 - Skeleton
 - Fixed map drawing
 - Player character can move
