@@ -12,7 +12,7 @@ Here's the TODO list.
 - ~~Move all imports to different folder for clearer main directory~~ DONE
 - ~~Make visual_core, map_core and player_character modules~~ DONE
 - Add more environment items (current items are prefixed by env_)
-- Update mining so mining isn't instant
+- ~~Update mining so mining isn't instant~~ DONE
 - ~~Update mining so mining gives a drop specified in item_db.py~~ DONE
 - Add map warps
 - ~~Properly implement item_db item lookup~~ DONE
