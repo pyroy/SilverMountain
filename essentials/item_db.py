@@ -19,6 +19,7 @@ class Item:
         self.type = "Misc."
         self.amount = 1
         self.name = self.id #for now
+        self.data = {}
         
     def get_display_name(self):
         if self.amount > 1:

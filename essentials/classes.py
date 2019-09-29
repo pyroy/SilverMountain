@@ -48,6 +48,8 @@ class Player:
             
         self.map = None
         
+        self.is_moving = False
+        
     #In the future when inventory gets added, players look 
     #different based on what they're wearing.
     #This function will eventually handle that.
@@ -65,6 +67,8 @@ class Player:
         if self.map == None: 
             print("[Console/W]>> Player map not set!")
             return
+            
+        self.is_moving = True
     
         #just check bounds everywhere you try to move
         self.speed = 2/17*dt
@@ -93,6 +97,7 @@ class Player:
         #keys are in DDR order. do not move if relevant keys are not being pressed
         if any( [keys[pygame.K_LEFT], keys[pygame.K_DOWN], keys[pygame.K_UP], keys[pygame.K_RIGHT]] ):
             self.move(dt, [keys[pygame.K_LEFT], keys[pygame.K_DOWN], keys[pygame.K_UP], keys[pygame.K_RIGHT]])
+        else: self.is_moving = False
         
 class Map:
     def __init__(self, boundmap, groundmap, rendered_items, zetamap=None, betamap=None):
@@ -185,7 +190,8 @@ class RenderedItems:
         self.raw_list = []
         
     def add_item(self, rect, drawn_pos, data={}, name="", type="NoType"):
-        self.raw_list.append( RenderedItem(rect, drawn_pos, data, name, type) )
+        if rect != None:
+            self.raw_list.append( RenderedItem(rect, drawn_pos, data, name, type) )
         
     def get_items(self, type="", data=[]):
     

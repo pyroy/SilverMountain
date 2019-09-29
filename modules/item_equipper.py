@@ -87,7 +87,7 @@ class module_head(module_master):
                     player_character.equipped[item.type].append(item)
                 else: player_character.equipped[item.type] = [item]
         
-        if self.mouse_clicked:
+        if self.mouse_clicked and MODULES.get_module("Essential::Inventory").open:
             for i in MODULES.get_module("Essential::Inventory").rendered_items.get_items_clicked(self.mouse_pos):
                 item = player_character.inventory.items[ i.data["index"] ]
                 player_character.inventory.equip(item)

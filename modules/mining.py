@@ -17,6 +17,7 @@ class module_head(module_master):
         self.anim_done = True
         self.mouse_pos = (0,0)
         self.mouse_clicked = False
+        self.focus = None
         
     def info(self):
         print("This module handles mining.\nEquip any pickaxe and click on a minable tile to mine the item from the tile.")
@@ -33,9 +34,6 @@ class module_head(module_master):
       
     def handle_mouseclick(self, event):
         if event.button == 1:
-            self.anim_done = False
-            self.anim_frames = 10
-            
             self.mouse_pos = event.pos
             self.mouse_clicked = True
     
@@ -49,7 +47,33 @@ class module_head(module_master):
             canvas_unscaled.blit(p, tuple_add(tuple_sub(visual_core.CAMERA_OFFSET, c.topleft), (r_x-6, r_y+8))) #adjust positioning for rotation around pivot, and fix it to player location
             #So this does not yet work in FIXED camera mode but that's not fully implemented yet
             
+    def mine_block(self, game_main, block): #takes a RenderedItem
+        game_main.current_map.update_zetamap( (int(block.drawn_pos[0]/32), int(block.drawn_pos[1]/32)), "")
+        if 'drop' in block.data:
+            self.pc.inventory.add_item(idb.lookup[block.data["drop"]].new())
+            
+    def set_focus(self, block):
+        self.focus = block
+            
     def run_frame(self, game_main, MODULES):
+    
+        if self.focus != None and "mined" in self.focus.data:
+        
+            self.anim_done = False
+            if self.anim_frames == -10:
+                self.anim_frames = 10
+        
+            self.focus.data["mined"] -= 1
+            
+            if self.focus.data["mined"] == 0:
+                self.mine_block(game_main, self.focus)
+                self.set_focus(None)
+                
+        if self.focus != None and not ("pickaxe" in self.pc.equipped and len(self.pc.equipped["pickaxe"]) > 0):
+            self.set_focus(None)
+            
+        if self.pc.is_moving:
+            self.set_focus(None)
     
         if not self.anim_done:
             if self.anim_frames == -10:
@@ -65,6 +89,4 @@ class module_head(module_master):
             clicked_env = game_main.current_map.rendered_items.get_items_clicked( (self.mouse_pos[0]*320/720, self.mouse_pos[1]*320/720), "zetatile") #you HAVE to descale the mouse, NEVER scale up the canvas!!
             for i in clicked_env:
                 if "pickaxe" in self.pc.equipped and len(self.pc.equipped["pickaxe"]) > 0:
-                    game_main.current_map.update_zetamap( (int(i.drawn_pos[0]/32), int(i.drawn_pos[1]/32)), "")
-                    if 'drop' in i.data:
-                        self.pc.inventory.add_item(idb.lookup[i.data["drop"]].new())
+                    self.set_focus(i)
