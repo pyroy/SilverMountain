@@ -1,4 +1,4 @@
-import pygame, math
+import pygame, math, random
 import essentials.sprites as sprites
 from essentials.item_db import idb
 from modules.MODULE import module_master
@@ -8,6 +8,26 @@ def tuple_sub(tup1, tup2):
     
 def tuple_add(tup1, tup2):
     return [tup1[i] + tup2[i] for i in range(len(tup1))]
+
+def get_cells_around(cell, map_limit_x=100000, map_limit_y=100000):
+    ret = []
+    
+    if cell[0] - 1 >= 0:
+        ret.append( (cell[0] - 1, cell[1]) )
+        
+    if cell[0] + 1 <= map_limit_x:
+        ret.append( (cell[0] + 1, cell[1]) )
+        
+    if cell[1] - 1 >= 0:
+        ret.append( (cell[0], cell[1] - 1) )
+        
+    if cell[1] + 1 <= map_limit_y:
+        ret.append( (cell[0], cell[1] + 1) )
+        
+    return ret
+    
+def distance(a, b, c, d):
+    return math.sqrt( (a-b)**2 + (c-d)**2 )
 
 class module_head(module_master):
     def __init__(self):
@@ -27,6 +47,7 @@ class module_head(module_master):
         
     def setup(self, game_main, MODULES):
         self.pc = MODULES.get_module("Essential::Player").player_character
+        self.pf = MODULES.get_module("Basegame::Pathfinding")
         
     def start_new_frame(self):
         self.mouse_pos = (0,0)
@@ -44,7 +65,7 @@ class module_head(module_master):
             c.center = p.get_rect().center
             r_x = -math.sin(-self.pick_rotation/360*2*math.pi+0.75*math.pi)*16
             r_y = math.cos(-self.pick_rotation/360*2*math.pi+0.75*math.pi)*16
-            canvas_unscaled.blit(p, tuple_add(tuple_sub(visual_core.CAMERA_OFFSET, c.topleft), (r_x-6, r_y+8))) #adjust positioning for rotation around pivot, and fix it to player location
+            canvas_unscaled.blit(p, tuple_add(tuple_sub(visual_core.CAMERA_OFFSET, c.topleft), (r_x+2-8, r_y+8))) #adjust positioning for rotation around pivot, and fix it to player location
             #So this does not yet work in FIXED camera mode but that's not fully implemented yet
             
     def mine_block(self, game_main, block): #takes a RenderedItem
@@ -58,16 +79,20 @@ class module_head(module_master):
     def run_frame(self, game_main, MODULES):
     
         if self.focus != None and "mined" in self.focus.data:
-        
-            self.anim_done = False
-            if self.anim_frames == -10:
-                self.anim_frames = 10
-        
-            self.focus.data["mined"] -= 1
+            d = distance(self.focus.data["x"], self.pc.x_position, self.focus.data["y"], self.pc.y_position)
+            if d > 64:
+                self.pf.goto_goal( precision=10 )
+
+            elif self.pc.pathfinder.is_hijacking == False:
+                self.anim_done = False
+                if self.anim_frames == -10:
+                    self.anim_frames = 10
             
-            if self.focus.data["mined"] == 0:
-                self.mine_block(game_main, self.focus)
-                self.set_focus(None)
+                self.focus.data["mined"] -= 1
+                
+                if self.focus.data["mined"] == 0:
+                    self.mine_block(game_main, self.focus)
+                    self.set_focus(None)
                 
         if self.focus != None and not ("pickaxe" in self.pc.equipped and len(self.pc.equipped["pickaxe"]) > 0):
             self.set_focus(None)
@@ -90,3 +115,8 @@ class module_head(module_master):
             for i in clicked_env:
                 if "pickaxe" in self.pc.equipped and len(self.pc.equipped["pickaxe"]) > 0:
                     self.set_focus(i)
+                    goals = [g for g in get_cells_around( (int(self.focus.data["x"]//32), int(self.focus.data["y"]//32)) ) if game_main.current_map.boundmap[ g[1] ][ g[0] ] == 0]
+                    if goals != []:
+                        goal = random.choice(goals)
+                        self.pf.set_goal( goal )
+                    else: self.set_focus(None)

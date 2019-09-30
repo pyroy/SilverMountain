@@ -37,6 +37,7 @@ class Player:
     def __init__(self):
         self.x_position = 32
         self.y_position = 32
+        self.orientation = "left"
         
         #used for collision checks @ line 58
         self.bounding_box = [

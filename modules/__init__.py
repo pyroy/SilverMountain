@@ -15,7 +15,8 @@ module_list = [
     "item_equipper",
     "mining",
     "debug_info",
-    "ore_hp"
+    "ore_hp",
+    "pathfinding"
     ]
     
 exec("".join(["import modules.{}\n".format(m) for m in module_list]))
