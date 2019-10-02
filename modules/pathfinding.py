@@ -54,6 +54,7 @@ def path_algorithm(start, stop, walls, map_limit_x, map_limit_y, iteration_max=1
                 if not already_in_list:
                     paths.append( new_cell )
                     
+                    #when goal reached
                     if new_cell[0][0] == stop[0] and new_cell[0][1] == stop[1]:
                         final_path = []
                         cur = new_cell[1]

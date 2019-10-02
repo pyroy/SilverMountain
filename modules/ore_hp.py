@@ -3,19 +3,18 @@ import essentials.classes as classes
 import essentials.font as font
 from modules.MODULE import module_master
 
-SCALE = 720/320
-def scale_up(pos):
-    return (pos[0]*SCALE, pos[1]*SCALE)
-
 class module_head(module_master):
     def __init__(self):
         self.module_name = "Basegame::OreHP"
+        
+    def setup(self, game_main, MODULES):
+        self.scaler = MODULES.get_module("Essential::Scaler")
     
     def make_graphics(self, game_main, MODULES, visual_core):
         for item in game_main.current_map.rendered_items.get_items():
             if "mined" in item.data and item.data["mined"] < item.data["minetime"]:
-                dpos = item.get_drawnpos()
-                fll = 32*SCALE*item.data["mined"]/item.data["minetime"]
-                pygame.draw.rect(game_main.canvas, (0, 255, 0), ((dpos[0]*SCALE, dpos[1]*SCALE), (fll,4)))
-                if fll < 72.0:
-                    pygame.draw.rect(game_main.canvas, (255, 0, 0), ((dpos[0]*SCALE + fll, dpos[1]*SCALE), (32*SCALE - fll,4)))
+                s_pos = item.get_screen_pos()
+                fll = self.scaler.scale(32*item.data["mined"]/item.data["minetime"], mode="scale x")
+                pygame.draw.rect(game_main.canvas, (0, 255, 0), (self.scaler.scale(s_pos), (fll,4)))
+                if fll < self.scaler.scale(32, mode = "scale x"):
+                    pygame.draw.rect(game_main.canvas, (255, 0, 0), (self.scaler.scale(s_pos, postoffset=(fll,0)), (32*self.scaler.SCALE_X - fll,4)))

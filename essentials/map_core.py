@@ -49,6 +49,10 @@ def load_map(map_name):
                 rendered_items.add_item(pygame.Rect(0,0,32,32), (i*32, j*32), data={'id':'env_ore','x':i*32,'y':j*32,'drop':'ironore','minetime':200,'mined':200}, name="env_ore", type="zetatile")
                 boundmap[j][i] = 1
                 
+            elif l[j][i] == '3':
+            
+                rendered_items.add_item(pygame.Rect(0,0,32,32), (i*32, j*32), data={'id':'map_warp','x':i*32,'y':j*32,'destination':'map1'}, name="map_warp", type="warp")
+                
             else:
             
                 boundmap[j][i] = 0

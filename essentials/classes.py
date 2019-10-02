@@ -12,6 +12,7 @@ class Game:
         self.is_active = True
         self.is_paused = False
         self.screen_size = (720, 720)
+        self.unscaled_canvas_size = (320, 320)
         self.canvas = pygame.display.set_mode(self.screen_size)
         self.frame_limiter = pygame.time.Clock()
         self.dt = 0
@@ -19,6 +20,7 @@ class Game:
         self.timescale = 1 #lol
         self.frameno = 0
         self.keys_pressed = []
+        self.mouse_pos = (0, 0)
         
         #sets the map currently active (mainly for graphics)
         self.current_map = None
@@ -32,73 +34,6 @@ class Game:
         
     def set_title(self, title):
         pygame.display.set_caption(title)
-
-class Player:
-    def __init__(self):
-        self.x_position = 32
-        self.y_position = 32
-        self.orientation = "left"
-        
-        #used for collision checks @ line 58
-        self.bounding_box = [
-            (6,6),
-            (6,26),
-            (26,6),
-            (26,26)
-            ]
-            
-        self.map = None
-        
-        self.is_moving = False
-        
-    #In the future when inventory gets added, players look 
-    #different based on what they're wearing.
-    #This function will eventually handle that.
-    def get_sprite(self):
-        return sprites.player_sprite
-        
-    def set_map(self, map):
-        self.map = map
-        
-    #returns the screen position of the four boundcheck corners
-    def get_bounds(self):
-        return [tuple_add(self.bounding_box[i], (self.x_position, self.y_position)) for i in range(4)]
-        
-    def move(self, dt, directions):
-        if self.map == None: 
-            print("[Console/W]>> Player map not set!")
-            return
-            
-        self.is_moving = True
-    
-        #just check bounds everywhere you try to move
-        self.speed = 2/17*dt
-    
-        if directions[0]:
-            self.x_position -= self.speed
-            if self.map.check_bounds(self.get_bounds()):
-                self.x_position += self.speed
-                
-        if directions[1]:
-            self.y_position += self.speed
-            if self.map.check_bounds(self.get_bounds()):
-                self.y_position -= self.speed
-        
-        if directions[2]:
-            self.y_position -= self.speed
-            if self.map.check_bounds(self.get_bounds()):
-                self.y_position += self.speed
-                
-        if directions[3]:
-            self.x_position += self.speed
-            if self.map.check_bounds(self.get_bounds()):
-                self.x_position -= self.speed
-        
-    def feed_info(self, dt, keys):
-        #keys are in DDR order. do not move if relevant keys are not being pressed
-        if any( [keys[pygame.K_LEFT], keys[pygame.K_DOWN], keys[pygame.K_UP], keys[pygame.K_RIGHT]] ):
-            self.move(dt, [keys[pygame.K_LEFT], keys[pygame.K_DOWN], keys[pygame.K_UP], keys[pygame.K_RIGHT]])
-        else: self.is_moving = False
         
 class Map:
     def __init__(self, boundmap, groundmap, rendered_items, zetamap=None, betamap=None):
@@ -170,9 +105,9 @@ class Map:
         
 #see RenderedItems
 class RenderedItem:
-    def __init__(self, rect, drawn_pos, data, name, type):
+    def __init__(self, rect, pos, data, name, type):
         self.rect = rect
-        self.drawn_pos = drawn_pos
+        self.pos = pos
         self.data = data
         self.name = name
         self.type = type
@@ -180,8 +115,13 @@ class RenderedItem:
         #offset is used in get_drawnpos literally only for getting the right position for mouse click detection on tiles
         self.offset = (0,0)
     
-    def get_drawnpos(self):
-        return tuple_add(self.drawn_pos, self.offset)
+    def get_screen_pos(self):
+    
+        #actual position on the unscaled canvas! vewwy impowtant owo :3
+        return tuple_add(self.get_pos(), self.offset)
+        
+    def get_pos(self):
+        return self.pos
         
 #RenderedItems stores the list of graphical objects rendered, and gives them meaning (data)
 #Exempli Gratia: player inventory uses a RenderedItems class to know what label that was drawn corresponds to what item_db class.
@@ -190,9 +130,9 @@ class RenderedItems:
     def __init__(self):
         self.raw_list = []
         
-    def add_item(self, rect, drawn_pos, data={}, name="", type="NoType"):
+    def add_item(self, rect, pos, data={}, name="", type="NoType"):
         if rect != None:
-            self.raw_list.append( RenderedItem(rect, drawn_pos, data, name, type) )
+            self.raw_list.append( RenderedItem(rect, pos, data, name, type) )
         
     def get_items(self, type="", data=[]):
     
@@ -226,13 +166,12 @@ class RenderedItems:
     def get_items_clicked(self, mouse_pos, type="", data=[]):
     
         #returns list of RenderedItem classes where mouse_pos is in the get_drawnpos() rect, meaning the mouse cursor is on the RenderedItem.
-        return [i for i in self.get_items(type, data) if self.in_rect(i.rect, mouse_pos, i.get_drawnpos())]
+        return [i for i in self.get_items(type, data) if self.in_rect(i.rect, mouse_pos, i.get_screen_pos())]
         
-    def modify_pos(self, offset, scale, types):
+    def modify_pos(self, offset, scale):
         #applies a linear transformation to RenderedItem offset
-        for t in types:
-            for i in self.get_items(t):
-                i.offset = (offset[0]*scale, offset[1]*scale)
+        for i in self.get_items():
+            i.offset = (offset[0]*scale, offset[1]*scale)
     
     def reset(self):
         self.raw_list = []

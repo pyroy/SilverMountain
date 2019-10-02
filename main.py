@@ -15,12 +15,13 @@ ALL_MODULES = MODULES.get_all_modules()
 game_main = classes.Game()
 game_main.set_title("Silver Mountain pre-alpha v0.125")
 game_main.fps = 120
-
+game_main.unscaled_canvas_size = (320, 320)
 #maps load from map_core
 game_main.current_map = map_core.load_map("map2")
 
 #setup all modules
 for module_head in ALL_MODULES: module_head.setup(game_main, MODULES)
+visual_core.setup(game_main)
 
 #if a command is initiated by pressing c, this runs the command
 def execute_command(cmd):
@@ -101,6 +102,7 @@ while game_main.is_active:
             clicked = False
             
     game_main.keys_pressed = pygame.key.get_pressed()
+    game_main.mouse_pos = pygame.mouse.get_pos()
             
     #draw everything on unscaled canvas, see visual_core.py
     canvas_unscaled = visual_core.make_graphics(game_main, MODULES)

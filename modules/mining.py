@@ -48,6 +48,7 @@ class module_head(module_master):
     def setup(self, game_main, MODULES):
         self.pc = MODULES.get_module("Essential::Player").player_character
         self.pf = MODULES.get_module("Basegame::Pathfinding")
+        self.sc = MODULES.get_module("Essential::Scaler")
         
     def start_new_frame(self):
         self.mouse_pos = (0,0)
@@ -69,7 +70,7 @@ class module_head(module_master):
             #So this does not yet work in FIXED camera mode but that's not fully implemented yet
             
     def mine_block(self, game_main, block): #takes a RenderedItem
-        game_main.current_map.update_zetamap( (int(block.drawn_pos[0]/32), int(block.drawn_pos[1]/32)), "")
+        game_main.current_map.update_zetamap( (int(block.get_pos()[0]/32), int(block.get_pos()[1]/32)), "")
         if 'drop' in block.data:
             self.pc.inventory.add_item(idb.lookup[block.data["drop"]].new())
             
@@ -111,7 +112,7 @@ class module_head(module_master):
                 self.anim_frames -= 1
                 
         if self.mouse_clicked:
-            clicked_env = game_main.current_map.rendered_items.get_items_clicked( (self.mouse_pos[0]*320/720, self.mouse_pos[1]*320/720), "zetatile") #you HAVE to descale the mouse, NEVER scale up the canvas!!
+            clicked_env = game_main.current_map.rendered_items.get_items_clicked( self.sc.scale(game_main.mouse_pos, mode = "descale tuple"), "zetatile") #you HAVE to descale the mouse, NEVER scale up the canvas!!
             for i in clicked_env:
                 if "pickaxe" in self.pc.equipped and len(self.pc.equipped["pickaxe"]) > 0:
                     self.set_focus(i)
