@@ -14,7 +14,7 @@ class Player:
         self.x_position = 32
         self.y_position = 32
         self.orientation = "left"
-        self.mov_speed = 1
+        self.mov_speed = 1.2
         
         #used for collision checks @ line 58
         self.bounding_box = [
@@ -32,7 +32,10 @@ class Player:
     #different based on what they're wearing.
     #This function will eventually handle that.
     def get_sprite(self):
-        return sprites.player_sprite
+        if self.orientation == "left":
+            return sprites.IDS["player_left"]
+        elif self.orientation == "right":
+            return sprites.IDS["player_right"]
         
     def set_map(self, map):
         self.map = map
@@ -68,14 +71,13 @@ class Player:
         if self.map == None: 
             print("[Console/W]>> Player map not set!")
             return
-            
-        self.is_moving = True
     
         #just check bounds everywhere you try to move
         self.speed = self.mov_speed/17*dt
     
         if directions[0]:
             self.x_position -= self.speed
+            self.orientation = "left"
             if self.map.check_bounds(self.get_bounds()):
                 self.x_position += self.speed
                 
@@ -91,12 +93,14 @@ class Player:
                 
         if directions[3]:
             self.x_position += self.speed
+            self.orientation = "right"
             if self.map.check_bounds(self.get_bounds()):
                 self.x_position -= self.speed
         
     def feed_info(self, dt, keys):
         #keys are in DDR order. do not move if relevant keys are not being pressed
         if any( [keys[pygame.K_LEFT], keys[pygame.K_DOWN], keys[pygame.K_UP], keys[pygame.K_RIGHT]] ):
+            self.is_moving = True
             self.move(dt, [keys[pygame.K_LEFT], keys[pygame.K_DOWN], keys[pygame.K_UP], keys[pygame.K_RIGHT]])
         else: self.is_moving = False
 

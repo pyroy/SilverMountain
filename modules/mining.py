@@ -60,13 +60,13 @@ class module_head(module_master):
             self.mouse_clicked = True
     
     def make_scaled_graphics(self, game_main, MODULES, visual_core, canvas_unscaled):
-        if "pickaxe" in self.pc.equipped and len(self.pc.equipped["pickaxe"]) > 0:
+        if "pickaxe" in self.pc.equipped and len(self.pc.equipped["pickaxe"]) > 0 and self.focus != None and self.pc.pathfinder.is_hijacking == False:
             c = self.pc.equipped["pickaxe"][0].sprite.get_rect()
             p = pygame.transform.rotate(self.pc.equipped["pickaxe"][0].sprite, self.pick_rotation)
             c.center = p.get_rect().center
             r_x = -math.sin(-self.pick_rotation/360*2*math.pi+0.75*math.pi)*8
             r_y = math.cos(-self.pick_rotation/360*2*math.pi+0.75*math.pi)*8
-            canvas_unscaled.blit(p, tuple_add(tuple_sub(visual_core.CAMERA_OFFSET, c.topleft), (r_x+1-4, r_y+4))) #adjust positioning for rotation around pivot, and fix it to player location
+            canvas_unscaled.blit(p, tuple_add(tuple_sub(self.focus.get_screen_pos(), c.topleft), (r_x+1-4+14, r_y+4-8))) #adjust positioning for rotation around pivot, and fix it to player location
             #So this does not yet work in FIXED camera mode but that's not fully implemented yet
             
     def mine_block(self, game_main, block): #takes a RenderedItem
@@ -100,6 +100,7 @@ class module_head(module_master):
             
         if self.pc.is_moving:
             self.set_focus(None)
+            self.pf.stop()
     
         if not self.anim_done:
             if self.anim_frames == -10:
@@ -120,4 +121,6 @@ class module_head(module_master):
                     if goals != []:
                         goal = random.choice(goals)
                         self.pf.set_goal( goal )
+                        if distance(self.focus.data["x"], self.pc.x_position, self.focus.data["y"], self.pc.y_position) > 32:
+                            self.pf.goto_goal( precision=10 )
                     else: self.set_focus(None)

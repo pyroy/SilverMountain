@@ -11,7 +11,7 @@ class Game:
         #everything should be pretty self explanatory here.
         self.is_active = True
         self.is_paused = False
-        self.screen_size = (720, 720)
+        self.screen_size = (1280, 720)
         self.unscaled_canvas_size = (320, 320)
         self.canvas = pygame.display.set_mode(self.screen_size)
         self.frame_limiter = pygame.time.Clock()

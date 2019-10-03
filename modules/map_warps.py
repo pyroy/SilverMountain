@@ -15,6 +15,6 @@ class module_head(module_master):
         for item in game_main.current_map.rendered_items.get_items(type="warp"):
             s_pos = item.get_screen_pos()
             destination = item.data["destination"]
-            pygame.draw.rect(game_main.canvas, (120, 0, 255), (self.sc.scale(s_pos, preoffset=(8,8)), self.sc.scale( (16,16) )))
-            if self.pc.within_distance(item.get_pos(), 40, posoffset = (16,16)):
-                font.render_to(game_main.canvas, self.sc.scale(s_pos, preoffset = (8,8)), destination )
+            pygame.draw.rect(game_main.canvas, (120, 0, 255), (self.sc.scale(s_pos, preoffset=(4, 4)), self.sc.scale( (8,8) )))
+            if self.pc.within_distance(item.get_pos(), 10, posoffset = (8, 8)):
+                font.render_to(game_main.canvas, self.sc.scale(s_pos, preoffset = (4, 4)), destination )

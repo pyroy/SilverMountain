@@ -15,7 +15,8 @@ ALL_MODULES = MODULES.get_all_modules()
 game_main = classes.Game()
 game_main.set_title("Silver Mountain pre-alpha v0.125")
 game_main.set_target_fps(120)
-game_main.unscaled_canvas_size = (160, 160)
+game_main.unscaled_canvas_size = (240, 135)
+game_main.screen_size = (1280, 720)
 
 #maps load from map_core
 game_main.set_map( map_core.load_map("map2") )

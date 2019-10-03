@@ -13,12 +13,12 @@ module_list = [
     "player",
     "inventory",
     "item_equipper",
-    "mining",
     "debug_info",
     "ore_hp",
     "pathfinding",
     "map_warps",
-    "scaler"
+    "scaler",
+    "mining"
     ]
     
 exec("".join(["import modules.{}\n".format(m) for m in module_list]))

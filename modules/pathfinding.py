@@ -98,11 +98,9 @@ class Pathfinder:
             return None
         
         elif self.path_index >= len(self.set_path):
-            self.pc.pathfinder.is_done = True
             return None
             
         else: 
-            print(self.path_index);print(len(self.set_path))
             return (self.set_path[self.path_index][0][0] - current_pos[0], self.set_path[self.path_index][0][1] - current_pos[1])
             #return (path_get[1][0][0] - current_pos[0], path_get[1][0][1] - current_pos[1] )
         
@@ -111,18 +109,17 @@ class Pathfinder:
         self.path_index += 1
         self.target_x = int((self.pc.x_position+8)//16)*16 + move[0]*16
         self.target_y = int((self.pc.y_position+8)//16)*16 + move[1]*16
-        print(self.target_x, self.target_y)
         self.precision = precision
     
     def run_move_frame(self, dt):
     
-        if self.target_x - self.pc.x_position > 0:
+        if self.target_x - self.pc.x_position > 1:
             self.pc.move(dt, [0, 0, 0, 1])
-        elif self.target_x - self.pc.x_position < 0:
+        elif self.target_x - self.pc.x_position < -1:
             self.pc.move(dt, [1, 0, 0, 0])
-        if self.target_y - self.pc.y_position < 0:
+        if self.target_y - self.pc.y_position < -1:
             self.pc.move(dt, [0, 0, 1, 0])
-        elif self.target_y - self.pc.y_position > 0:
+        elif self.target_y - self.pc.y_position > 1:
             self.pc.move(dt, [0, 1, 0, 0])
             
         if abs(self.pc.x_position - self.target_x) < self.precision and abs(self.pc.y_position - self.target_y) < self.precision:
@@ -131,6 +128,7 @@ class Pathfinder:
 class module_head(module_master):
     def __init__(self):
         self.module_name = "Basegame::Pathfinding"
+        self.next_move = None
         
     def setup(self, game_main, MODULES):
         self.pc = MODULES.get_module("Essential::Player").player_character
@@ -143,26 +141,32 @@ class module_head(module_master):
     def set_goal(self, goal):
         self.pc.pathfinder.set_goal( self.pc.map, goal )
         self.pc.pathfinder.get_path( (int((self.pc.x_position+8)//16), int((self.pc.y_position+8)//16)) )
-        print( self.pc.pathfinder.set_path )
+        self.next_move = self.pc.pathfinder.get_directions_from( (int((self.pc.x_position+8)//16), int((self.pc.y_position+8)//16)) )
         
     def goto_goal(self, precision=1):
         self.pc.pathfinder.is_done = False
         self.pc.pathfinder.is_hijacking = True
         self.precision = precision
         
+    def stop(self):
+        self.pc.pathfinder.is_hijacking = False
+        self.pc.pathfinder.is_done = True
+        
     def run_frame(self, game_main, MODULES):
     
         if self.pc.pathfinder.is_hijacking:
         
-            next_move = self.pc.pathfinder.get_directions_from( (int((self.pc.x_position+8)//16), int((self.pc.y_position+8)//16)) )
+            if self.pc.pathfinder.move_performed:
             
-            if next_move != None and self.pc.pathfinder.move_performed:
-                self.pc.pathfinder.perform_next_move( next_move, self.precision )
+                if self.next_move == None:
+                    self.stop()
+                    
+                else:
+                    self.next_move = self.pc.pathfinder.get_directions_from( (int((self.pc.x_position+8)//16), int((self.pc.y_position+8)//16)) )
+            
+            if self.next_move != None and self.pc.pathfinder.move_performed:
+                self.pc.pathfinder.perform_next_move( self.next_move, self.precision )
                 
-            if not self.pc.pathfinder.move_performed:
+            else: 
+                self.pc.pathfinder.move_performed = False
                 self.pc.pathfinder.run_move_frame(game_main.dt)
-                
-            if next_move == None:
-                self.pc.pathfinder.move_performed = True
-                self.pc.pathfinder.is_hijacking = False
-                self.pc.pathfinder.is_done = True
