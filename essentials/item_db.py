@@ -6,6 +6,7 @@ class Database:
         self.lookup = {}
         
 idb = Database()
+lookup = idb.lookup
 
 class Item:
     def __init__(self, id):

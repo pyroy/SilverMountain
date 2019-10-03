@@ -66,6 +66,7 @@ def path_algorithm(start, stop, walls, map_limit_x, map_limit_y, iteration_max=1
                             paths = remove_higher_counter(paths, cur)
                             cur -= 1
                             g = get_all_counter(paths, origin, cur)
+
                         return final_path[::-1]
                         
         iterations += 1
@@ -81,23 +82,36 @@ class Pathfinder:
         self.target_y = 0
         self.is_hijacking = False
         self.is_done = False
+        self.set_path = None
+        self.path_index = 0
         
     def set_goal(self, map, destination):
         self.map = map
         self.destination = destination
         
+    def get_path(self, current_pos):
+        self.path_index = 0
+        self.set_path = path_algorithm( current_pos, self.destination, self.map, self.map.map_size[0], self.map.map_size[1] )
+        
     def get_directions_from(self, current_pos):
-        path_get = path_algorithm( current_pos, self.destination, self.map, self.map.map_size[0], self.map.map_size[1] )
+        if self.set_path == None: 
+            return None
         
-        if path_get == None: return None
+        elif self.path_index >= len(self.set_path):
+            self.pc.pathfinder.is_done = True
+            return None
+            
         else: 
-            return (path_get[1][0][0] - current_pos[0], path_get[1][0][1] - current_pos[1] )
+            print(self.path_index);print(len(self.set_path))
+            return (self.set_path[self.path_index][0][0] - current_pos[0], self.set_path[self.path_index][0][1] - current_pos[1])
+            #return (path_get[1][0][0] - current_pos[0], path_get[1][0][1] - current_pos[1] )
         
-    def perform_next_move(self, move, precision=3):
+    def perform_next_move(self, move, precision=1):
         self.pc.pathfinder.move_performed = False
-        self.target_x = int((self.pc.x_position+16)//32)*32 + move[0]*32
-        self.target_y = int((self.pc.y_position+16)//32)*32 + move[1]*32
-        
+        self.path_index += 1
+        self.target_x = int((self.pc.x_position+8)//16)*16 + move[0]*16
+        self.target_y = int((self.pc.y_position+8)//16)*16 + move[1]*16
+        print(self.target_x, self.target_y)
         self.precision = precision
     
     def run_move_frame(self, dt):
@@ -128,8 +142,10 @@ class module_head(module_master):
         
     def set_goal(self, goal):
         self.pc.pathfinder.set_goal( self.pc.map, goal )
+        self.pc.pathfinder.get_path( (int((self.pc.x_position+8)//16), int((self.pc.y_position+8)//16)) )
+        print( self.pc.pathfinder.set_path )
         
-    def goto_goal(self, precision=3):
+    def goto_goal(self, precision=1):
         self.pc.pathfinder.is_done = False
         self.pc.pathfinder.is_hijacking = True
         self.precision = precision
@@ -138,7 +154,7 @@ class module_head(module_master):
     
         if self.pc.pathfinder.is_hijacking:
         
-            next_move = self.pc.pathfinder.get_directions_from( (int((self.pc.x_position+16)//32), int((self.pc.y_position+16)//32)) )
+            next_move = self.pc.pathfinder.get_directions_from( (int((self.pc.x_position+8)//16), int((self.pc.y_position+8)//16)) )
             
             if next_move != None and self.pc.pathfinder.move_performed:
                 self.pc.pathfinder.perform_next_move( next_move, self.precision )

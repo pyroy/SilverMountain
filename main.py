@@ -14,13 +14,15 @@ ALL_MODULES = MODULES.get_all_modules()
 #game_main is our main game controller. all the game variables will be set in this class.
 game_main = classes.Game()
 game_main.set_title("Silver Mountain pre-alpha v0.125")
-game_main.fps = 120
-game_main.unscaled_canvas_size = (320, 320)
+game_main.set_target_fps(120)
+game_main.unscaled_canvas_size = (160, 160)
+
 #maps load from map_core
-game_main.current_map = map_core.load_map("map2")
+game_main.set_map( map_core.load_map("map2") )
 
 #setup all modules
 for module_head in ALL_MODULES: module_head.setup(game_main, MODULES)
+
 visual_core.setup(game_main)
 
 #if a command is initiated by pressing c, this runs the command
@@ -35,14 +37,13 @@ def execute_command(cmd):
         print("            - settargetfps (fps)")
         
     if cmd[0] == "loadmap" and len(cmd) == 2:
-        game_main.current_map = map_core.load_map(cmd[1])
+        game_main.set_map( map_core.load_map(cmd[1]) )
         player_character = MODULES.get_module("Essential::Player").player_character
         player_character.set_map(game_main.current_map)
                         
     if cmd[0] == "setplayerpos" and len(cmd) == 3:
         player_character = MODULES.get_module("Essential::Player").player_character
-        player_character.x_position = int(cmd[1])
-        player_character.y_position = int(cmd[2])
+        player_character.set_pos( int(cmd[1]), int(cmd[2]) )
         
     if cmd[0] == "getinfo" and len(cmd) == 2:
         print(" ")
@@ -58,7 +59,7 @@ def execute_command(cmd):
         game_main.timescale = float(cmd[1])
         
     if cmd[0] == "settargetfps" and len(cmd) == 2:
-        game_main.fps = float(cmd[1])
+        game_main.set_target_fps( float(cmd[1]) )
 
 #variable to store click information for the handle_mouseclick function @ line 84
 clicked = False

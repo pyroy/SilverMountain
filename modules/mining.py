@@ -64,13 +64,13 @@ class module_head(module_master):
             c = self.pc.equipped["pickaxe"][0].sprite.get_rect()
             p = pygame.transform.rotate(self.pc.equipped["pickaxe"][0].sprite, self.pick_rotation)
             c.center = p.get_rect().center
-            r_x = -math.sin(-self.pick_rotation/360*2*math.pi+0.75*math.pi)*16
-            r_y = math.cos(-self.pick_rotation/360*2*math.pi+0.75*math.pi)*16
-            canvas_unscaled.blit(p, tuple_add(tuple_sub(visual_core.CAMERA_OFFSET, c.topleft), (r_x+2-8, r_y+8))) #adjust positioning for rotation around pivot, and fix it to player location
+            r_x = -math.sin(-self.pick_rotation/360*2*math.pi+0.75*math.pi)*8
+            r_y = math.cos(-self.pick_rotation/360*2*math.pi+0.75*math.pi)*8
+            canvas_unscaled.blit(p, tuple_add(tuple_sub(visual_core.CAMERA_OFFSET, c.topleft), (r_x+1-4, r_y+4))) #adjust positioning for rotation around pivot, and fix it to player location
             #So this does not yet work in FIXED camera mode but that's not fully implemented yet
             
     def mine_block(self, game_main, block): #takes a RenderedItem
-        game_main.current_map.update_zetamap( (int(block.get_pos()[0]/32), int(block.get_pos()[1]/32)), "")
+        game_main.current_map.update_zetamap( (int(block.get_pos()[0]/16), int(block.get_pos()[1]/16)), "")
         if 'drop' in block.data:
             self.pc.inventory.add_item(idb.lookup[block.data["drop"]].new())
             
@@ -81,7 +81,7 @@ class module_head(module_master):
     
         if self.focus != None and "mined" in self.focus.data:
             d = distance(self.focus.data["x"], self.pc.x_position, self.focus.data["y"], self.pc.y_position)
-            if d > 64:
+            if d > 32:
                 self.pf.goto_goal( precision=10 )
 
             elif self.pc.pathfinder.is_hijacking == False:
@@ -116,7 +116,7 @@ class module_head(module_master):
             for i in clicked_env:
                 if "pickaxe" in self.pc.equipped and len(self.pc.equipped["pickaxe"]) > 0:
                     self.set_focus(i)
-                    goals = [g for g in get_cells_around( (int(self.focus.data["x"]//32), int(self.focus.data["y"]//32)) ) if game_main.current_map.boundmap[ g[1] ][ g[0] ] == 0]
+                    goals = [g for g in get_cells_around( (int(self.focus.data["x"]//16), int(self.focus.data["y"]//16)) ) if game_main.current_map.boundmap[ g[1] ][ g[0] ] == 0]
                     if goals != []:
                         goal = random.choice(goals)
                         self.pf.set_goal( goal )

@@ -17,7 +17,7 @@ CAMERA_OFFSET = (0,0)
 
 def setup(game_main):
     global CAMERA_OFFSET
-    CAMERA_OFFSET = (game_main.unscaled_canvas_size[0]/2-16, game_main.unscaled_canvas_size[1]/2-16) #Shift to make player center of screen. Could also be used to pan.
+    CAMERA_OFFSET = (game_main.unscaled_canvas_size[0]/2-8, game_main.unscaled_canvas_size[1]/2-8) #Shift to make player center of screen. Could also be used to pan.
 
 #draws everything and scales it up to screen size for pixelated effect.
 def make_graphics(game_main, MODULES):

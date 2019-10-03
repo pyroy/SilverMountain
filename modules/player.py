@@ -14,13 +14,14 @@ class Player:
         self.x_position = 32
         self.y_position = 32
         self.orientation = "left"
+        self.mov_speed = 1
         
         #used for collision checks @ line 58
         self.bounding_box = [
-            (6,6),
-            (6,26),
-            (26,6),
-            (26,26)
+            (3,3),
+            (3,13),
+            (13,3),
+            (13,13)
             ]
             
         self.map = None
@@ -42,8 +43,12 @@ class Player:
     def get_pos(self):
         return (self.get_x(), self.get_y())
         
+    def set_pos(self, pos):
+        self.x_position = pos[0]
+        self.y_position = pos[1]
+        
     def get_center(self):
-        return (self.get_x() + 16, self.get_y() + 16)
+        return (self.get_x() + 8, self.get_y() + 8)
         
     def get_x(self):
         return self.x_position
@@ -67,7 +72,7 @@ class Player:
         self.is_moving = True
     
         #just check bounds everywhere you try to move
-        self.speed = 2/17*dt
+        self.speed = self.mov_speed/17*dt
     
         if directions[0]:
             self.x_position -= self.speed

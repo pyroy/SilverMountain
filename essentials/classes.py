@@ -35,6 +35,12 @@ class Game:
     def set_title(self, title):
         pygame.display.set_caption(title)
         
+    def set_target_fps(self, fps):
+        self.fps = fps
+        
+    def set_map(self, map):
+        self.current_map = map
+        
 class Map:
     def __init__(self, boundmap, groundmap, rendered_items, zetamap=None, betamap=None):
     
@@ -51,7 +57,7 @@ class Map:
     def process_alphamap(self):
     
         #again, see map_core.py
-        self.alphamap = pygame.Surface((32*len(self.boundmap[0]),32*len(self.boundmap)))
+        self.alphamap = pygame.Surface((16*len(self.boundmap[0]),16*len(self.boundmap)))
         self.alphamap.blit(self.groundmap, (0,0))
         self.alphamap.blit(self.zetamap, (0,0))
         
@@ -68,7 +74,7 @@ class Map:
     def convert_tup_mappos(self, tuple):
     
         #converts screen position to map position. Returns None if coordinates lie OOB.
-        x, y = int(tuple[0]//32), int(tuple[1]//32)
+        x, y = int(tuple[0]//16), int(tuple[1]//16)
         
         if x < 0 or x > self.map_size[1]:
             x = None
@@ -80,13 +86,13 @@ class Map:
         
     def update_zetamap(self, pos, env):
         #clear the part to be updated
-        self.zetamap.fill( (0,0,0,0), (pos[0]*32, pos[1]*32, 32, 32) )
+        self.zetamap.fill( (0,0,0,0), (pos[0]*16, pos[1]*16, 16, 16) )
         
         #and remove the bound
         self.boundmap[pos[1]][pos[0]] = 0
         
         #get the RenderedItem at the specified position
-        for i in self.rendered_items.get_items( data=[ ("x", pos[0]*32), ("y", pos[1]*32) ] ):
+        for i in self.rendered_items.get_items( data=[ ("x", pos[0]*16), ("y", pos[1]*16) ] ):
         
             #im sorry little one
             self.rendered_items.remove_item(i)
@@ -98,7 +104,7 @@ class Map:
             self.boundmap[pos[1]][pos[0]] = 1
             
             #re-add specified tile to the RenderedItems list
-            self.rendered_items.add_item(pygame.Rect(0,0,32,32), (pos[0]*32, pos[1]*32), data={'id':env,'x':pos[0]*32,'y':pos[1]*32}, name=env, type="zetatile")
+            self.rendered_items.add_item(pygame.Rect(0,0,16,16), (pos[0]*16, pos[1]*16), data={'id':env,'x':pos[0]*16,'y':pos[1]*16}, name=env, type="zetatile")
             
         #re-make the alphamap with the updated zetamap
         self.process_alphamap()
