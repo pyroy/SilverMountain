@@ -36,6 +36,8 @@ class Item:
         c.amount = amount
         return c
             
+#all this shit needs to be put into a json file tbh
+            
 #Rusty Pickaxe
 idb.lookup["oldpick"] = Item("item_pick")
 idb.lookup["oldpick"].weight = 10

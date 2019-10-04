@@ -19,7 +19,8 @@ game_main.unscaled_canvas_size = (240, 135)
 game_main.screen_size = (1280, 720)
 
 #maps load from map_core
-game_main.set_map( map_core.load_map("map2") )
+#game_main.set_map( map_core.load_map("map2") )
+game_main.set_map( map_core.new_load_map("test_map") )
 
 #setup all modules
 for module_head in ALL_MODULES: module_head.setup(game_main, MODULES)

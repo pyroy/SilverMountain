@@ -46,9 +46,17 @@ class Player:
     def get_pos(self):
         return (self.get_x(), self.get_y())
         
-    def set_pos(self, pos):
-        self.x_position = pos[0]
-        self.y_position = pos[1]
+    def set_pos(self, pos, pos2ndarg=None):
+        
+        #works with either set_pos( (x, y) )
+        #or with set_pos(x, y)
+    
+        if pos2ndarg == None:
+            self.x_position = pos[0]
+            self.y_position = pos[1]
+        else:
+            self.x_position = pos
+            self.y_position = pos2ndarg
         
     def get_center(self):
         return (self.get_x() + 8, self.get_y() + 8)

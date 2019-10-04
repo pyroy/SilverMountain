@@ -17,6 +17,7 @@ class module_head(module_master):
         self.invreach = 0
         self.open = False
         self.finished_animating = True
+        self.can_open = True
         
         self.rendered_items = classes.RenderedItems()
         
@@ -26,13 +27,19 @@ class module_head(module_master):
     def get_dependencies(self):
         return ["Essential::ItemEquipper"]
         
+    def disable_inv(self):
+        self.can_open = False
+        
+    def enable_inv(self):
+        self.can_open = True
+        
     def handle_keydown(self, event):
         if event.key == pygame.K_i:
-            if self.open and self.finished_animating:
+            if self.open and self.finished_animating and self.can_open:
                self.open, self.finished_animating = False, False
                self.anim_frames = 0
                
-            elif not self.open and self.finished_animating:
+            elif not self.open and self.finished_animating and self.can_open:
                self.open, self.finished_animating = True, False
                self.anim_frames = 0
             

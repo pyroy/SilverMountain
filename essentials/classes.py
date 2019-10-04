@@ -129,6 +129,9 @@ class RenderedItem:
     def get_pos(self):
         return self.pos
         
+    def get_center(self):
+        return (self.pos[0] + 8, self.pos[1] + 8)
+        
 #RenderedItems stores the list of graphical objects rendered, and gives them meaning (data)
 #Exempli Gratia: player inventory uses a RenderedItems class to know what label that was drawn corresponds to what item_db class.
 #also supports type/data filtering

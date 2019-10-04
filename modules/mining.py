@@ -47,6 +47,7 @@ class module_head(module_master):
         
     def setup(self, game_main, MODULES):
         self.pc = MODULES.get_module("Essential::Player").player_character
+        self.pc.mining_reach = 24
         self.pf = MODULES.get_module("Basegame::Pathfinding")
         self.sc = MODULES.get_module("Essential::Scaler")
         
@@ -81,7 +82,7 @@ class module_head(module_master):
     
         if self.focus != None and "mined" in self.focus.data:
             d = distance(self.focus.data["x"], self.pc.x_position, self.focus.data["y"], self.pc.y_position)
-            if d > 32:
+            if d > self.pc.mining_reach:
                 self.pf.goto_goal( precision=10 )
 
             elif self.pc.pathfinder.is_hijacking == False:
@@ -121,6 +122,6 @@ class module_head(module_master):
                     if goals != []:
                         goal = random.choice(goals)
                         self.pf.set_goal( goal )
-                        if distance(self.focus.data["x"], self.pc.x_position, self.focus.data["y"], self.pc.y_position) > 32:
+                        if distance(self.focus.data["x"], self.pc.x_position, self.focus.data["y"], self.pc.y_position) > self.pc.mining_reach:
                             self.pf.goto_goal( precision=10 )
                     else: self.set_focus(None)

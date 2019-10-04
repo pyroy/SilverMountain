@@ -4,7 +4,6 @@ import essentials.classes as classes
 #I hate this python file
 #this is the least likable python file I've ever seen
 #I hate it. I just hate it so much
-#and I don't know why. It does its job yet I hate it so much
 #It's just... it's kind of here. and it's one of the most important files in this project
 #but it doesn't feel like it belongs here.
 #why does this file exist?
