@@ -1,0 +1,9 @@
+{
+"weight": 12,
+"value": 65,
+"stacks": false,
+"equippable": true,
+"name": "Iron Pickaxe",
+"type": "pickaxe",
+"sprite": "test_pick"
+}

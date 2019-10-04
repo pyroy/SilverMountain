@@ -1,0 +1,9 @@
+{
+"weight": 10,
+"value": 35,
+"stacks": false,
+"equippable": true,
+"name": "Rusty Old Pickaxe",
+"type": "pickaxe",
+"sprite": "test_pick"
+}

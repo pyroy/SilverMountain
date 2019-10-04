@@ -1,11 +1,10 @@
 import pygame
-import pygame.freetype
-pygame.freetype.init()
+import pygame.font
+pygame.font.init()
 
-font = pygame.freetype.SysFont("consolas", 10)
-font.antialiased = False
+font = pygame.font.SysFont("consolas", 10)
 
 def render_to(canvas, position, text, color=(255,255,255)):
     if position[0] < 0 or position[1] < 0 or position[0] > canvas.get_rect().width or position[1] > canvas.get_rect().width:
         pass
-    return font.render_to(canvas, position, text, color)
+    return canvas.blit(font.render(text, False, color), position)

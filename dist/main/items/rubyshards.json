@@ -1,0 +1,9 @@
+{
+"weight": 0.5,
+"value": 13,
+"stacks": true,
+"equippable": false,
+"name": "Ruby Shards",
+"type": "ore",
+"sprite": "None"
+}
