@@ -13,7 +13,7 @@ ALL_MODULES = MODULES.get_all_modules()
 
 #game_main is our main game controller. all the game variables will be set in this class.
 game_main = classes.Game()
-game_main.set_title("Silver Mountain pre-alpha v0.125")
+game_main.set_title("Silver Mountain pre-alpha v0.14285714286")
 game_main.set_target_fps(120)
 game_main.unscaled_canvas_size = (240, 135)
 game_main.screen_size = (1280, 720)
