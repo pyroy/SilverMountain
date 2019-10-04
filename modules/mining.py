@@ -62,8 +62,9 @@ class module_head(module_master):
     
     def make_scaled_graphics(self, game_main, MODULES, visual_core, canvas_unscaled):
         if "pickaxe" in self.pc.equipped and len(self.pc.equipped["pickaxe"]) > 0 and self.focus != None and self.pc.pathfinder.is_hijacking == False:
-            c = self.pc.equipped["pickaxe"][0].sprite.get_rect()
-            p = pygame.transform.rotate(self.pc.equipped["pickaxe"][0].sprite, self.pick_rotation)
+            p_sprite = sprites.IDS[self.pc.equipped["pickaxe"][0].get_attribute("sprite")]
+            c = p_sprite.get_rect()
+            p = pygame.transform.rotate(p_sprite, self.pick_rotation)
             c.center = p.get_rect().center
             r_x = -math.sin(-self.pick_rotation/360*2*math.pi+0.75*math.pi)*8
             r_y = math.cos(-self.pick_rotation/360*2*math.pi+0.75*math.pi)*8

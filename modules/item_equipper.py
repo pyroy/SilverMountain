@@ -9,7 +9,7 @@ class Itemcontainer:
         self.equiplimits = {}
         
     def add_item(self, item):
-        if item.stacks:
+        if item.get_attribute("stacks"):
             for i in self.items:
                 if i.id == item.id:
                     i.amount += 1
@@ -21,20 +21,21 @@ class Itemcontainer:
     def get_etypecount(self, type):
         c = 0
         for item in self.items:
-            if item.type == type and item.equipped:
+            if item.get_attribute("type") == type and item.equipped:
                 c += 1
         return c
         
     def equip(self, item):
+        i_type = item.get_attribute("type")
         if item.equipped:
             item.equipped = False
         else:
-            if item.type in self.equiplimits:
-                if self.get_etypecount(item.type) < self.equiplimits[item.type]:
+            if i_type in self.equiplimits:
+                if self.get_etypecount(i_type) < self.equiplimits[i_type]:
                     item.equipped = True
                 else:
                     for i in self.items:
-                        if i.type == item.type and self.get_etypecount(item.type) >= self.equiplimits[item.type]:
+                        if i.get_attribute("type") == i_type and self.get_etypecount(i_type) >= self.equiplimits[i_type]:
                             i.equipped = False
                     item.equipped = True
             else:
@@ -78,14 +79,14 @@ class module_head(module_master):
     def run_frame(self, game_main, MODULES):
     
         player_character = MODULES.get_module("Essential::Player").player_character
-    
         player_character.equipped = {}
         
         for item in player_character.inventory.items:
+            i_type = item.get_attribute("type")
             if item.equipped:
-                if item.type in player_character.equipped:
-                    player_character.equipped[item.type].append(item)
-                else: player_character.equipped[item.type] = [item]
+                if i_type in player_character.equipped:
+                    player_character.equipped[i_type].append(item)
+                else: player_character.equipped[i_type] = [item]
         
         if self.mouse_clicked and MODULES.get_module("Essential::Inventory").open:
             for i in MODULES.get_module("Essential::Inventory").rendered_items.get_items_clicked(self.mouse_pos):
