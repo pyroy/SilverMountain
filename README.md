@@ -5,17 +5,6 @@ In theory this would be a RPG where your primary source of income is mining.
 
 Get rich, become glorious!
 
-## now that I have your unwavering attention
-Here's the TODO list.
-
-# To advance to version v0.16666666667, we need to:
-- Completely clean up item_db
-- Add dialog boxes
-- Add interactable items
-- Add more items/sprites in general
-- (Optional) implement betamap loading
-- (Optional) implement npcs
-
 # Changelog
 ## v0.14285714286 
 ### "The wtf-happened update"
