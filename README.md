@@ -1,4 +1,4 @@
-# Silver Mountain v0.125
+# Silver Mountain pre-alpha v0.14285714286
 A glorious game inspired by THE classic mobile game, Gold Mountain.
 
 In theory this would be a RPG where your primary source of income is mining.
@@ -8,16 +8,23 @@ Get rich, become glorious!
 ## now that I have your unwavering attention
 Here's the TODO list.
 
-# To advance to version v0.14285714286, we need to:
-- ~~Move all imports to different folder for clearer main directory~~ DONE
-- ~~Make visual_core, map_core and player_character modules~~ DONE
-- Add more environment items (current items are prefixed by env_)
-- ~~Update mining so mining isn't instant~~ DONE
-- ~~Update mining so mining gives a drop specified in item_db.py~~ DONE
-- Add map warps
-- ~~Properly implement item_db item lookup~~ DONE
+# To advance to version v0.16666666667, we need to:
+- Completely clean up item_db
+- Add dialog boxes
+- Add interactable items
+- Add more items/sprites in general
+- (Optional) implement betamap loading
+- (Optional) implement npcs
 
 # Changelog
+## v0.14285714286 
+### "The wtf-happened update"
+- A huge restructure
+- map_core reworked to load json data for items on the zetamap
+- Mining now takes time, and if you're not in range:
+- Pathfinding got added, so you can click on an ore to walk over and mine it.
+- Map warps were added so you can travel between maps.
+
 ## v0.125 
 ### "The why-can-I-equip-iron-ore update"
 - Modules fully implemented
