@@ -1,0 +1,7 @@
+{
+"drop":"rubyshards", 
+"sprites": ["ruby_ore"],
+"minetime":400, 
+"mined":400,
+"collision": true
+} 

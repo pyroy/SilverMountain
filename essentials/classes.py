@@ -113,6 +113,7 @@ class Map:
 class RenderedItem:
     def __init__(self, rect, pos, data, name, type):
         self.rect = rect
+        self.base_rect = rect
         self.pos = pos
         self.data = data
         self.name = name
@@ -131,6 +132,9 @@ class RenderedItem:
         
     def get_center(self):
         return (self.pos[0] + 8, self.pos[1] + 8)
+        
+    def get_rect(self):
+        return self.rect
         
 #RenderedItems stores the list of graphical objects rendered, and gives them meaning (data)
 #Exempli Gratia: player inventory uses a RenderedItems class to know what label that was drawn corresponds to what item_db class.
@@ -167,20 +171,22 @@ class RenderedItems:
         self.raw_list.remove(item)
         
     def in_rect(self, rect, mouse, drawn_pos=(0,0)):
+        print(rect, mouse, drawn_pos, rect.left, rect.right, rect.bottom, rect.top)
     
         #mama mia, look at all this spaghetti!
         #pretty sure these checks aren't even 100% accurate but we'll see
-        return mouse[0] >= rect.left+drawn_pos[0] and mouse[0] <= rect.right+drawn_pos[0] and mouse[1] >= drawn_pos[1] and mouse[1] <= rect.bottom+drawn_pos[1]
+        return mouse[0] >= rect.left+drawn_pos[0] and mouse[0] <= rect.right+drawn_pos[0] and mouse[1] >= rect.top+drawn_pos[1] and mouse[1] <= rect.bottom+drawn_pos[1]
         
     def get_items_clicked(self, mouse_pos, type="", data=[]):
     
         #returns list of RenderedItem classes where mouse_pos is in the get_drawnpos() rect, meaning the mouse cursor is on the RenderedItem.
-        return [i for i in self.get_items(type, data) if self.in_rect(i.rect, mouse_pos, i.get_screen_pos())]
+        return [i for i in self.get_items(type, data) if self.in_rect(i.get_rect(), mouse_pos)]
         
     def modify_pos(self, offset, scale):
         #applies a linear transformation to RenderedItem offset
         for i in self.get_items():
             i.offset = (offset[0]*scale, offset[1]*scale)
+            i.rect = pygame.Rect(i.get_screen_pos()[0], i.get_screen_pos()[1], i.base_rect.right, i.base_rect.bottom)
     
     def reset(self):
         self.raw_list = []

@@ -73,12 +73,24 @@ def new_load_map(map_name):
             tile = z_map_dict[row[x]]
             if tile == 'void':
                 continue
-            tile_sprites = z_json[tile]["sprites"]
-            tile_sprite = tile_sprites[0]
-            tile_data = {'id':tile,'x':x*TILE_SIZE,'y':y*TILE_SIZE}
-            tile_data.update( z_json[tile]["data"] )
-            tile_has_collision = int( z_json[tile]["collision"] )
-            
+            if "sharedjson" in z_json[tile]:
+                sharedjson = z_json[tile]["sharedjson"]
+                
+                with open("blocks/{}.json".format(sharedjson)) as origin_file:
+                    origin_data = json.load(origin_file)
+                    
+                tile_sprites = origin_data["sprites"]
+                tile_sprite = tile_sprites[0]
+                tile_data = {'id':tile,'x':x*TILE_SIZE,'y':y*TILE_SIZE}
+                tile_data.update( origin_data )
+                tile_data.update( z_json[tile]["extradata"] )
+                tile_has_collision = int( origin_data["collision"] )
+            else:
+                tile_sprites = z_json[tile]["sprites"]
+                tile_sprite = tile_sprites[0]
+                tile_data = {'id':tile,'x':x*TILE_SIZE,'y':y*TILE_SIZE}
+                tile_data.update( z_json[tile]["data"] )
+                tile_has_collision = int( z_json[tile]["collision"] )
             
             zetamap.blit(sprites.IDS[tile_sprite], (x*TILE_SIZE, y*TILE_SIZE))
             rendered_items.add_item(pygame.Rect(0,0,TILE_SIZE,TILE_SIZE), (x*TILE_SIZE, y*TILE_SIZE), data=tile_data, name=tile, type="zetatile")

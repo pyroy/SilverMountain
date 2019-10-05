@@ -1,0 +1,7 @@
+{
+"drop":"ironore", 
+"sprites": ["env_ore"],
+"minetime":200, 
+"mined":200,
+"collision": true
+} 
