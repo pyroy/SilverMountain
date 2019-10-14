@@ -1,4 +1,4 @@
-import pygame
+import pygame, copy
 import essentials.sprites as sprites
 
 #adds tuples or lists such that (a, b) + (c, d) = (a + b, c + d)
@@ -109,6 +109,48 @@ class Map:
         #re-make the alphamap with the updated zetamap
         self.process_alphamap()
         
+class Itemcontainer:
+    def __init__(self, items=[]):
+        self.items = items
+        self.equiplimits = {}
+        
+    def add_item(self, item):
+        if item.get_attribute("stacks"):
+            for i in self.items:
+                if i.id == item.id:
+                    i.amount += 1
+                    return
+            self.items.append(item)
+        else:
+            self.items.append(item)
+            
+    def get_etypecount(self, type):
+        c = 0
+        for item in self.items:
+            if item.get_attribute("type") == type and item.equipped:
+                c += 1
+        return c
+        
+    def equip(self, item):
+        i_type = item.get_attribute("type")
+        if item.equipped:
+            item.equipped = False
+        else:
+            if i_type in self.equiplimits:
+                if self.get_etypecount(i_type) < self.equiplimits[i_type]:
+                    item.equipped = True
+                else:
+                    for i in self.items:
+                        if i.get_attribute("type") == i_type and self.get_etypecount(i_type) >= self.equiplimits[i_type]:
+                            i.equipped = False
+                    item.equipped = True
+            else:
+                item.equipped = True
+                
+    def cpy(self):
+        c = copy.deepcopy(self)
+        return c
+        
 #see RenderedItems
 class RenderedItem:
     def __init__(self, rect, pos, data, name, type):
@@ -171,7 +213,6 @@ class RenderedItems:
         self.raw_list.remove(item)
         
     def in_rect(self, rect, mouse, drawn_pos=(0,0)):
-        print(rect, mouse, drawn_pos, rect.left, rect.right, rect.bottom, rect.top)
     
         #mama mia, look at all this spaghetti!
         #pretty sure these checks aren't even 100% accurate but we'll see

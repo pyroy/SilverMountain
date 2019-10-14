@@ -31,7 +31,7 @@ class Item:
         self.data[attr] = val
         
     def new(self, amount=1):
-        c = copy.copy(self)
+        c = copy.deepcopy(self)
         c.amount = amount
         return c
             

@@ -27,6 +27,7 @@ class Player:
         self.map = None
         self.is_moving = False
         self.scaler = None
+        self.allow_movement = True
         
     #In the future when inventory gets added, players look 
     #different based on what they're wearing.
@@ -79,6 +80,9 @@ class Player:
         if self.map == None: 
             print("[Console/W]>> Player map not set!")
             return
+            
+        if not self.allow_movement:
+            return
     
         #just check bounds everywhere you try to move
         self.speed = self.mov_speed/17*dt
@@ -106,11 +110,12 @@ class Player:
                 self.x_position -= self.speed
         
     def feed_info(self, dt, keys):
-        #keys are in DDR order. do not move if relevant keys are not being pressed
-        if any( [keys[pygame.K_LEFT], keys[pygame.K_DOWN], keys[pygame.K_UP], keys[pygame.K_RIGHT]] ):
-            self.is_moving = True
-            self.move(dt, [keys[pygame.K_LEFT], keys[pygame.K_DOWN], keys[pygame.K_UP], keys[pygame.K_RIGHT]])
-        else: self.is_moving = False
+        if self.allow_movement:
+            #keys are in DDR order. do not move if relevant keys are not being pressed
+            if any( [keys[pygame.K_LEFT], keys[pygame.K_DOWN], keys[pygame.K_UP], keys[pygame.K_RIGHT]] ):
+                self.is_moving = True
+                self.move(dt, [keys[pygame.K_LEFT], keys[pygame.K_DOWN], keys[pygame.K_UP], keys[pygame.K_RIGHT]])
+            else: self.is_moving = False
 
 class module_head(module_master):
     def __init__(self):

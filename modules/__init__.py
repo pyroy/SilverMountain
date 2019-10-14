@@ -18,7 +18,9 @@ module_list = [
     "pathfinding",
     "map_warps",
     "scaler",
-    "mining"
+    "mining",
+    "dialog",
+    "sell_menu"
     ]
     
 exec("".join(["import modules.{}\n".format(m) for m in module_list]))

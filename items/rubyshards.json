@@ -5,5 +5,5 @@
 "equippable": false,
 "name": "Ruby Shards",
 "type": "ore",
-"sprite": "None"
+"sprite": "item_rubyshards"
 }

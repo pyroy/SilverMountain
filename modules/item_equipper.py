@@ -1,45 +1,8 @@
 import pygame
 import essentials.font as font
+import essentials.classes as classes
 from essentials.item_db import idb
 from modules.MODULE import module_master
-
-class Itemcontainer:
-    def __init__(self, items=[]):
-        self.items = items
-        self.equiplimits = {}
-        
-    def add_item(self, item):
-        if item.get_attribute("stacks"):
-            for i in self.items:
-                if i.id == item.id:
-                    i.amount += 1
-                    return
-            self.items.append(item)
-        else:
-            self.items.append(item)
-            
-    def get_etypecount(self, type):
-        c = 0
-        for item in self.items:
-            if item.get_attribute("type") == type and item.equipped:
-                c += 1
-        return c
-        
-    def equip(self, item):
-        i_type = item.get_attribute("type")
-        if item.equipped:
-            item.equipped = False
-        else:
-            if i_type in self.equiplimits:
-                if self.get_etypecount(i_type) < self.equiplimits[i_type]:
-                    item.equipped = True
-                else:
-                    for i in self.items:
-                        if i.get_attribute("type") == i_type and self.get_etypecount(i_type) >= self.equiplimits[i_type]:
-                            i.equipped = False
-                    item.equipped = True
-            else:
-                item.equipped = True
 
 class module_head(module_master):
     def __init__(self):
@@ -61,7 +24,7 @@ class module_head(module_master):
     
         player_character = MODULES.get_module("Essential::Player").player_character
         
-        player_character.inventory = Itemcontainer()
+        player_character.inventory = classes.Itemcontainer().cpy()
         player_character.inventory.add_item(idb.lookup["oldpick"].new())
         player_character.inventory.add_item(idb.lookup["oldpick"].new())
         player_character.inventory.add_item(idb.lookup["oldpick"].new())
