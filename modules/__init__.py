@@ -20,7 +20,8 @@ module_list = [
     "scaler",
     "mining",
     "dialog",
-    "sell_menu"
+    "sell_menu",
+    "npc_master"
     ]
     
 exec("".join(["import modules.{}\n".format(m) for m in module_list]))

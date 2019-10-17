@@ -132,7 +132,6 @@ class module_head(module_master):
         
         #set scaler (is this necessary?)
         self.player_character.set_scaler( MODULES.get_module("Essential::Scaler") )
-        print(self.player_character.scaler)
     
     def run_frame(self, game_main, MODULES):
         self.player_character.feed_info(game_main.dt, game_main.keys_pressed)
