@@ -24,7 +24,7 @@ game_main.set_map( map_core.new_load_map("test_map") )
 #setup all modules
 for module_head in ALL_MODULES: module_head.setup(game_main, MODULES)
 
-visual_core.setup(game_main)
+visual_core.setup(game_main, MODULES)
 
 #if a command is initiated by pressing c, this runs the command
 def execute_command(cmd):
@@ -105,22 +105,17 @@ while game_main.is_active:
             
     game_main.keys_pressed = pygame.key.get_pressed()
     game_main.mouse_pos = pygame.mouse.get_pos()
-            
-    #draw everything on unscaled canvas, see visual_core.py
-    canvas_unscaled = visual_core.make_graphics(game_main, MODULES)
     
     #let the modules also draw on the unscaled canvas
-    for module_head in ALL_MODULES:
-        module_head.make_scaled_graphics(game_main, MODULES, visual_core, canvas_unscaled)
-        
-    #scale the unscaled canvas to fit the screen
-    game_main.canvas.blit(pygame.transform.scale(canvas_unscaled, game_main.screen_size), (0,0))
+    #for module_head in ALL_MODULES:
+    #    module_head.make_scaled_graphics(game_main, MODULES, visual_core, canvas_unscaled)
     
-    #then run each frame and draw unscaled graphics over the screen
-    #also needs reworking, who calculates frames after scaled graphics, but before unscaled graphics?
+    #then run each frame and draw graphics over the screen
     for module_head in ALL_MODULES:
         module_head.run_frame(game_main, MODULES)
         module_head.make_graphics(game_main, MODULES, visual_core)
+        
+    visual_core.make_graphics(game_main)
 
     #advance my child
     game_main.next_frame() 

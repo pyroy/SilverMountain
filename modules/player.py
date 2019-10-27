@@ -135,3 +135,8 @@ class module_head(module_master):
     
     def run_frame(self, game_main, MODULES):
         self.player_character.feed_info(game_main.dt, game_main.keys_pressed)
+    
+    def make_graphics(self, game_main, MODULES, visual_core):
+        visual_core.VC.dump_layer("1player", mode="zoomed")
+        visual_core.VC.add_items_to_layer([(self.player_character.get_sprite(), self.player_character.get_pos())], "1player", mode="zoomed")
+        visual_core.VC.render_layer("1player", mode = "zoomed")

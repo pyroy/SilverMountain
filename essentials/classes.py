@@ -51,15 +51,6 @@ class Map:
         self.zetamap = zetamap
         self.betamap = betamap
         self.rendered_items = rendered_items
-        self.alphamap = None
-        self.process_alphamap()
-        
-    def process_alphamap(self):
-    
-        #again, see map_core.py
-        self.alphamap = pygame.Surface((16*len(self.boundmap[0]),16*len(self.boundmap)))
-        self.alphamap.blit(self.groundmap, (0,0))
-        self.alphamap.blit(self.zetamap, (0,0))
         
     def check_bounds(self, corners):
     
@@ -105,9 +96,6 @@ class Map:
             
             #re-add specified tile to the RenderedItems list
             self.rendered_items.add_item(pygame.Rect(0,0,16,16), (pos[0]*16, pos[1]*16), data={'id':env,'x':pos[0]*16,'y':pos[1]*16}, name=env, type="zetatile")
-            
-        #re-make the alphamap with the updated zetamap
-        self.process_alphamap()
         
 class Itemcontainer:
     def __init__(self, items=[]):

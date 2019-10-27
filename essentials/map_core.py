@@ -22,6 +22,10 @@ import essentials.classes as classes
 TILE_SIZE = 16
     
 def new_load_map(map_name):
+
+    ret_list_ground = []
+    ret_list_zeta = []
+
     rendered_items = classes.RenderedItems()
     
     with open("maps/{}/groundmap.txt".format(map_name)) as map_file:
@@ -43,12 +47,11 @@ def new_load_map(map_name):
         line = g_map_txt[i].replace("\n","").split(":")
         g_map_dict[ line[0] ] = line[1]
     
-    groundmap = pygame.Surface((TILE_SIZE*map_width, TILE_SIZE*map_height))
     for y in range(map_height):
         row = g_map_txt[y].replace("\n","").split(";")
         for x in range(map_width):
             tile = g_map_dict[row[x]]
-            groundmap.blit(pygame.transform.rotate(sprites.IDS[ tile ], 90*random.randint(0,3)), (x*TILE_SIZE, y*TILE_SIZE))
+            ret_list_ground.append( (pygame.transform.rotate(sprites.IDS[ tile ], 90*random.randint(0,3)), (x*TILE_SIZE, y*TILE_SIZE)) )
             rendered_items.add_item(pygame.Rect(0,0,TILE_SIZE,TILE_SIZE), (x*TILE_SIZE, y*TILE_SIZE), data={'id':tile,'x':x*TILE_SIZE,'y':y*TILE_SIZE}, name=tile, type="groundtile")
     
     #zetamap
@@ -64,7 +67,6 @@ def new_load_map(map_name):
         line = z_map_txt[i].replace("\n","").split(":")
         z_map_dict[ line[0] ] = line[1]
         
-    zetamap = pygame.Surface((TILE_SIZE*map_width, TILE_SIZE*map_height), pygame.SRCALPHA, 32)
     boundmap = [[0 for i in range(0, map_width)] for c in range(0, map_height)]
     
     for y in range(map_height):
@@ -92,8 +94,8 @@ def new_load_map(map_name):
                 tile_data.update( z_json[tile]["data"] )
                 tile_has_collision = int( z_json[tile]["collision"] )
             
-            zetamap.blit(sprites.IDS[tile_sprite], (x*TILE_SIZE, y*TILE_SIZE))
+            ret_list_zeta.append( (sprites.IDS[tile_sprite], (x*TILE_SIZE, y*TILE_SIZE)) )
             rendered_items.add_item(pygame.Rect(0,0,TILE_SIZE,TILE_SIZE), (x*TILE_SIZE, y*TILE_SIZE), data=tile_data, name=tile, type="zetatile")
             boundmap[y][x] = tile_has_collision
     
-    return classes.Map(boundmap, groundmap, rendered_items, zetamap)
+    return classes.Map(boundmap, ret_list_ground, rendered_items, ret_list_zeta)

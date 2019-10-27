@@ -1,5 +1,6 @@
 import pygame
 import essentials.classes as classes
+import classes.VisualCore
 
 #I hate this python file
 #this is the least likable python file I've ever seen
@@ -13,30 +14,31 @@ import essentials.classes as classes
 DEBUG_MODE = False
 CAMERA_MODE = "Follow" #Fixed | Follow
 CAMERA_OFFSET = (0,0)
+VC = None
+pc = None
+sc = None
 
-def setup(game_main):
-    global CAMERA_OFFSET
+def setup(game_main, MODULES):
+    global CAMERA_OFFSET, VC, pc, sc
     CAMERA_OFFSET = (game_main.unscaled_canvas_size[0]/2-8, game_main.unscaled_canvas_size[1]/2-8) #Shift to make player center of screen. Could also be used to pan.
+    pc = MODULES.get_module("Essential::Player").player_character
+    sc = MODULES.get_module("Essential::Scaler")
+    VC = classes.VisualCore.VisualCore(game_main.screen_size, game_main.unscaled_canvas_size)
 
 #draws everything and scales it up to screen size for pixelated effect.
-def make_graphics(game_main, MODULES):
+def make_graphics(game_main):
 
-    player_character = MODULES.get_module("Essential::Player").player_character
-    scaler = MODULES.get_module("Essential::Scaler") #these two really should be in setup
-    
-    canvas_unscaled = pygame.Surface(game_main.unscaled_canvas_size)
-    
-    if CAMERA_MODE == "Fixed": #this one for dungeons and other interior spaces
-        canvas_unscaled.blit(game_main.current_map.alphamap, (0,0))
-        canvas_unscaled.blit(player_character.get_sprite(), player_character.get_pos())
+    if "0gmap" not in VC.zoomed_layers:
+        VC.add_items_to_layer( game_main.current_map.groundmap, "0gmap", mode = "zoomed" )
+        VC.render_layer("0gmap", mode = "zoomed")
         
-    elif CAMERA_MODE == "Follow": #this one for overworld
-        canvas_unscaled.blit(game_main.current_map.alphamap, (-player_character.get_x()+CAMERA_OFFSET[0], -player_character.get_y()+CAMERA_OFFSET[1]))
-        canvas_unscaled.blit(player_character.get_sprite(), CAMERA_OFFSET)
-    
-    game_main.current_map.rendered_items.modify_pos((-player_character.get_x()+CAMERA_OFFSET[0], -player_character.get_y()+CAMERA_OFFSET[1]), 1)
-    
-    return canvas_unscaled
+    if "0zmap" not in VC.zoomed_layers:
+        VC.add_items_to_layer( game_main.current_map.zetamap, "0zmap", mode = "zoomed" )
+        VC.render_layer("0zmap", mode = "zoomed")
+       
+    game_main.canvas.fill( (0,0,0) )
+    game_main.canvas.blit( VC.render_all(), sc.scale((-pc.get_x()+CAMERA_OFFSET[0], -pc.get_y()+CAMERA_OFFSET[1])) )
+    game_main.current_map.rendered_items.modify_pos((-pc.get_x()+CAMERA_OFFSET[0], -pc.get_y()+CAMERA_OFFSET[1]), 1)
     
 #There is one glaring efficiency problem here, and that is that every frame 
 #the game has to make a new canvas, blit a whole bunch of things on it, rescale and blit again.
